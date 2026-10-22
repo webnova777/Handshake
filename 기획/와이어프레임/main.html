@@ -1,0 +1,166 @@
+<!doctype html>
+<!-- ⚠ 참고용 — 구현 코드로 재사용 금지 (저충실도 와이어 v0.1 · 핸드쉐이크 메인 · 기획안 4-1) -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[와이어] 메인 — 핸드쉐이크</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="wire.css">
+<style>
+  .m-hero{ position:relative; padding:0; border-top:0; }
+  .m-hero__bg{ position:absolute; inset:0; }
+  .m-hero__bg .hdsk-ph{ height:100%; aspect-ratio:auto; border-radius:0; border:0; }
+  .m-hero__bg .hdsk-ph{ align-items:flex-end; justify-content:flex-end; padding:16px; }   /* 자리 표시 글자가 문구 상자를 가리지 않게 */
+  .m-hero__in{ position:relative; min-height:680px; display:flex; flex-direction:column; justify-content:center; padding-top:80px; padding-bottom:80px; }
+  .m-hero__in > *{ max-width:720px; }
+  .m-hero__copy{ background:rgba(255,255,255,.88); padding:32px; border-radius:10px; }
+  .m-scene{ display:grid; grid-template-columns:5fr 7fr; gap:48px; align-items:center; padding:40px 0; border-top:1px dashed var(--line); }
+  .m-scene:first-of-type{ border-top:0; }
+  @media (max-width:768px){
+    .m-hero__in{ min-height:0; padding-top:56px; padding-bottom:56px; }
+    .m-hero__copy{ padding:22px; }
+    .m-scene{ grid-template-columns:1fr; gap:18px; padding:28px 0; }
+  }
+</style>
+</head>
+<body data-page="main">
+
+<!-- M-01 히어로 + 일하는 과정 모션그래픽 -->
+<section class="hdsk-sec m-hero" id="M-01">
+  <span class="w-id">M-01 히어로</span>
+  <div class="m-hero__bg"><div class="hdsk-ph"><span>히어로 배경 — 표현 방식 미정(캐릭터 / 인포그래픽 / 실사·AI)</span></div></div>
+  <div class="hdsk-wrap m-hero__in">
+    <div class="m-hero__copy">
+      <p class="hdsk-eyebrow" data-st="가안">병원 통신·보안·가전 솔루션</p>
+      <h1 class="hdsk-h1" data-st="가안">편리하게 납품하고<br class="brk-pc"> 신속하게 지킵니다</h1>
+      <p class="hdsk-lead" data-st="가안">병원 진료를 지키기 위해, 계약부터 설치, 개원 후 A/S까지 핸드쉐이크가 책임집니다.</p>
+      <div class="hdsk-btnrow">
+        <a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a>
+        <a class="hdsk-btn hdsk-btn--secondary" href="#M-01-scenes">일하는 과정 보기 ↓</a>
+      </div>
+    </div>
+    <p class="w-note">헤더는 이 섹션 위에서 투명(겹침) → 스크롤하면 흰 배경. 첫 화면은 로드와 동시에 등장(스크롤 감지 없음, CLAUDE.md 1-1). 모바일에서 높이를 화면 높이에 걸지 않는다(2번).</p>
+  </div>
+</section>
+
+<section class="hdsk-sec" id="M-01-scenes">
+  <span class="w-id">M-01 장면</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head">
+      <h2 class="hdsk-h2" data-st="가안">계약부터 사후관리까지, 한 업체가 끝까지</h2>
+    </div>
+    <div class="m-scene">
+      <div><p class="hdsk-card-label">1 / 4</p><h3 class="hdsk-card-title" data-st="가안">계약</h3>
+        <p class="hdsk-body">상담·설계·조율을 마치고 한 번의 계약으로 전 품목을 진행합니다.</p></div>
+      <div class="hdsk-ph"><span>장면 1 — 계약</span></div>
+    </div>
+    <div class="m-scene">
+      <div><p class="hdsk-card-label">2 / 4</p><h3 class="hdsk-card-title" data-st="가안">사전작업</h3>
+        <p class="hdsk-body">인테리어 공정표·도면 공유, 번호 채번, 기기 제원 송부, 수도 설비 사전 체크.</p></div>
+      <div class="hdsk-ph"><span>장면 2 — 사전작업</span></div>
+    </div>
+    <div class="m-scene">
+      <div><p class="hdsk-card-label">3 / 4</p><h3 class="hdsk-card-title" data-st="가안">납품</h3>
+        <p class="hdsk-body">인테리어 공정에 맞춰 네트워크 → 통신사 개통 → PC·전화 셋팅 → 보안 → 가전을 한 일정표로.</p></div>
+      <div class="hdsk-ph"><span>장면 3 — 납품</span></div>
+    </div>
+    <div class="m-scene">
+      <div><p class="hdsk-card-label">4 / 4</p><h3 class="hdsk-card-title" data-st="가안">사후관리</h3>
+        <p class="hdsk-body">CS관리방 운영, 진료 불가 시 당일 A/S, 원격으로 먼저 확인합니다.</p></div>
+      <div class="hdsk-ph"><span>장면 4 — 사후관리</span></div>
+    </div>
+    <p class="w-note">데스크톱 : 화면에 고정된 채 스크롤에 따라 장면 1→4 교체(겹쳐 전환). 모바일 : 지금처럼 세로로 나열해도 이해되게. 움직임 줄이기 설정이면 정지 4장.</p>
+  </div>
+</section>
+
+<!-- M-02 원장님이 얻는 것 3가지 -->
+<section class="hdsk-sec hdsk-sec--soft" id="M-02">
+  <span class="w-id">M-02 얻는 것 3</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">맡기시면 달라지는 세 가지</h2></div>
+    <div class="hdsk-grid hdsk-grid--3">
+      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">시간 절약</h3></div>
+        <p class="hdsk-body">업체 8곳을 따로 부를 필요 없이, 한 곳에서 끝냅니다.</p></div>
+      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="대기">추가 비용 걱정을 덜어 드립니다</h3></div>
+        <p class="hdsk-body">보안 가입 시 네트워크 무상 방문 A/S — 인터넷이 끊겨도 비용 걱정 없이 부르세요.</p></div>
+      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">정확한 가이드</h3></div>
+        <p class="hdsk-body">진료과와 병원 규모에 맞춘 품목을 제안합니다.</p></div>
+    </div>
+    <p class="w-note">② 비용 절감 : 무상 A/S 기간(평생/3년)·조건 범위 확인 후 확정. 아이콘은 선 아이콘 한 세트, 제목 왼쪽(5-2 #8).</p>
+  </div>
+</section>
+
+<!-- M-03 서비스 요약 -->
+<section class="hdsk-sec" id="M-03">
+  <span class="w-id">M-03 서비스 요약</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">개원에 필요한 장비, 한 곳에서</h2></div>
+    <div class="hdsk-grid hdsk-grid--3">
+      <a class="hdsk-card" href="service.html#S-01" style="text-decoration:none">
+        <div class="hdsk-ph" style="--ratio:4/3"><span>통신 대표 사진</span></div>
+        <p class="hdsk-card-label" style="margin-top:18px">통신사 · 네트워크 · PC·주변기기</p>
+        <h3 class="hdsk-card-title" data-st="가안">통신</h3>
+        <p class="hdsk-body">하나의 밸류체인으로 안전하고 편리하게</p></a>
+      <a class="hdsk-card" href="service.html#S-04" style="text-decoration:none">
+        <div class="hdsk-ph" style="--ratio:4/3"><span>보안 대표 사진</span></div>
+        <p class="hdsk-card-label" style="margin-top:18px">무인경비 · CCTV</p>
+        <h3 class="hdsk-card-title" data-st="가안">보안</h3>
+        <p class="hdsk-body">인테리어를 흐트러뜨리지 않고 병원을 지킵니다</p></a>
+      <a class="hdsk-card" href="service.html#S-05" style="text-decoration:none">
+        <div class="hdsk-ph" style="--ratio:4/3"><span>가전 대표 사진</span></div>
+        <p class="hdsk-card-label" style="margin-top:18px">디스플레이 · 생활가전</p>
+        <h3 class="hdsk-card-title" data-st="가안">가전</h3>
+        <p class="hdsk-body">인테리어와 협업하고, 납품 후에도 책임집니다</p></a>
+    </div>
+    <p class="hdsk-body" style="margin-top:24px" data-st="가안">진료과·병원 규모에 맞춰 필요한 품목만 골라 구성하실 수 있습니다.</p>
+    <p class="w-note">카드 전체가 링크 → 서비스 페이지 해당 섹션. 품목 이름은 G-01 이름표.</p>
+  </div>
+</section>
+
+<!-- M-04 대표 포트폴리오 (아임웹 갤러리 위젯) -->
+<section class="hdsk-sec hdsk-sec--soft" id="M-04">
+  <span class="w-id">M-04 대표 포트폴리오</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">진료과별 납품 사례</h2></div>
+    <div class="hdsk-grid hdsk-grid--3">
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+    </div>
+    <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--secondary" href="portfolio.html" data-st="가안">포트폴리오 전체 보기</a></div>
+    <p class="w-note">이 섹션은 <b>아임웹 갤러리 위젯</b>(코드 위젯 아님) — 우리 CSS 가 안 걸린다(1-4). 메인에 몇 건 보일지 [결정 필요]. 사진·병원명 노출 동의 [대기].</p>
+  </div>
+</section>
+
+<!-- M-05 상담 절차 -->
+<section class="hdsk-sec" id="M-05">
+  <span class="w-id">M-05 상담 절차</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">상담 신청 후, 이렇게 진행됩니다</h2></div>
+    <ol class="hdsk-steps">
+      <li class="hdsk-step"><span class="hdsk-step__no">01</span><h3 class="hdsk-card-title">상담</h3><p class="hdsk-body">전화로 먼저 상황을 여쭙니다</p></li>
+      <li class="hdsk-step"><span class="hdsk-step__no">02</span><h3 class="hdsk-card-title">상담양식</h3><p class="hdsk-body">필요한 내용을 양식으로 받습니다</p></li>
+      <li class="hdsk-step"><span class="hdsk-step__no">03</span><h3 class="hdsk-card-title">초안</h3><p class="hdsk-body">품목 구성 초안을 드립니다</p></li>
+      <li class="hdsk-step"><span class="hdsk-step__no">04</span><h3 class="hdsk-card-title">미팅</h3><p class="hdsk-body">초안을 놓고 함께 봅니다</p></li>
+      <li class="hdsk-step"><span class="hdsk-step__no">05</span><h3 class="hdsk-card-title">최종조율</h3><p class="hdsk-body">품목과 일정을 확정합니다</p></li>
+    </ol>
+    <p class="w-note">단계 이름·설명 모두 [가안 — 대표님 재확인 예정]. 이 절차가 끝나면 M-01 의 "계약"으로 이어진다. 상담 신청 C-01 과 같은 단계·이름.</p>
+  </div>
+</section>
+
+<!-- M-06 상담 CTA -->
+<section class="hdsk-sec hdsk-sec--soft" id="M-06">
+  <span class="w-id">M-06 상담 CTA</span>
+  <div class="hdsk-wrap" style="text-align:center">
+    <h2 class="hdsk-h2" data-st="가안" style="max-width:760px;margin:0 auto">개원 준비부터 개원 후까지, 핸드쉐이크가 함께합니다</h2>
+    <div class="hdsk-btnrow" style="justify-content:center"><a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>
+    <p class="hdsk-body" data-st="대기" style="display:inline-block;margin-top:24px">전화 (G-02) · 메일 (G-02) · 영업시간 (G-02)</p>
+    <p class="hdsk-body"><a class="hdsk-link" href="as.html" data-st="가안">이미 함께하는 병원이신가요? A/S 접수 →</a></p>
+    <p class="w-note" style="text-align:left">연락처는 G-02 회사 정보표 하나에서 가져온다(푸터와 중복 — 둘 다 같은 값). 카카오톡 채널이 있으면 버튼 추가 [대기].</p>
+  </div>
+</section>
+
+<script src="wire.js"></script>
+</body>
+</html>

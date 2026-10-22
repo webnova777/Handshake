@@ -1,0 +1,172 @@
+/* ══════════════════════════════════════════════════════════════════════
+   핸드쉐이크 홈페이지 — 저충실도 와이어프레임 공통 스타일
+   ⚠ 참고용 — 구현 코드로 재사용 금지 (아임웹 위젯 구조와 다르다. CLAUDE.md 1번)
+   값의 원본 : 프로젝트사양.md (타이포 3번 · 브레이크포인트 4번)
+   회색조만 쓴다 — 색은 디자인 단계에서 정한다
+   ══════════════════════════════════════════════════════════════════════ */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root{
+  /* 회색조 */
+  --ink:#1a1a1a; --sub:#555; --muted:#888; --line:#cfcfcf; --soft:#efefef; --soft2:#e3e3e3; --paper:#fff;
+  /* 타이포 토큰 — 프로젝트사양.md 3번(머신아트랩 기준) */
+  --fw-label:700; --lh-label:1.35; --ls-label:.02em;
+  --fw-head:800;  --lh-head:.98;   --ls-head:-.02em; --lh-head-ko:1.2;
+  --fw-sub:400;   --lh-sub:1.6;    --ls-sub:0;
+  --fw-cta:600;   --lh-cta:1;      --ls-cta:0;
+  /* 역할별 크기 — 데스크톱 */
+  --fs-eyebrow:16px; --fs-h1:56px; --fs-h2:40px; --fs-lead:20px;
+  --fs-card-title:24px; --fs-card-label:14px; --fs-body:17px; --fs-cta:17px;
+  /* 레이아웃 */
+  --gutter:40px; --maxw:1200px; --sec-pad:96px; --bar-h:0px;
+}
+@media (max-width:768px){
+  :root{
+    --fs-eyebrow:14px; --fs-h1:32px; --fs-h2:26px; --fs-lead:16px;
+    --fs-card-title:19px; --fs-card-label:13px; --fs-body:15px; --fs-cta:16px;
+    --gutter:20px; --sec-pad:56px; --bar-h:60px;
+  }
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{
+  font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;
+  color:var(--ink); background:var(--paper);
+  font-size:var(--fs-body); line-height:var(--lh-sub);
+  word-break:keep-all; overflow-wrap:break-word;
+  padding-bottom:var(--bar-h);
+}
+a{ color:inherit; }
+img{ max-width:100%; }
+@media (max-width:768px){ .brk-pc{ display:none; } }   /* PC 전용 줄바꿈 — CLAUDE.md 2번 */
+
+/* ── 역할별 글자 ─────────────────────────────────────────── */
+.hdsk-eyebrow{ font-size:var(--fs-eyebrow); font-weight:var(--fw-label); line-height:var(--lh-label); letter-spacing:var(--ls-label); color:var(--sub); margin:0 0 12px; }
+.hdsk-h1{ font-size:var(--fs-h1); font-weight:var(--fw-head); line-height:var(--lh-head-ko); letter-spacing:var(--ls-head); margin:0; }
+.hdsk-h2{ font-size:var(--fs-h2); font-weight:var(--fw-head); line-height:var(--lh-head-ko); letter-spacing:var(--ls-head); margin:0; }
+.hdsk-lead{ font-size:var(--fs-lead); font-weight:var(--fw-sub); line-height:var(--lh-sub); color:var(--sub); margin:16px 0 0; }
+.hdsk-card-title{ font-size:var(--fs-card-title); font-weight:700; line-height:1.35; letter-spacing:-.01em; margin:0; }
+.hdsk-card-label{ font-size:var(--fs-card-label); font-weight:var(--fw-label); line-height:var(--lh-label); letter-spacing:var(--ls-label); color:var(--sub); margin:0 0 6px; }
+.hdsk-body{ font-size:var(--fs-body); line-height:var(--lh-sub); color:var(--sub); margin:8px 0 0; }
+
+/* ── 버튼 (G-03) ────────────────────────────────────────── */
+.hdsk-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; padding:0 28px;
+  font-size:var(--fs-cta); font-weight:var(--fw-cta); line-height:var(--lh-cta); text-decoration:none; border-radius:8px; cursor:pointer;
+  border:1px solid var(--ink); }
+.hdsk-btn--primary{ background:var(--ink); color:#fff; }
+.hdsk-btn--secondary{ background:#fff; color:var(--ink); }
+.hdsk-link{ font-weight:600; text-decoration:none; border-bottom:1px solid currentColor; }
+.hdsk-btnrow{ display:flex; flex-wrap:wrap; gap:12px; margin-top:32px; }
+
+/* ── 레이아웃 ────────────────────────────────────────────── */
+.hdsk-wrap{ max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter); }
+.hdsk-sec{ position:relative; padding:var(--sec-pad) 0; border-top:1px solid var(--line); }
+.hdsk-sec--soft{ background:var(--soft); }
+.hdsk-sec__head{ max-width:760px; margin-bottom:40px; }
+.hdsk-grid{ display:grid; gap:24px; }
+.hdsk-grid--2{ grid-template-columns:repeat(2,1fr); }
+.hdsk-grid--3{ grid-template-columns:repeat(3,1fr); }
+.hdsk-grid--4{ grid-template-columns:repeat(4,1fr); }
+.hdsk-split{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+@media (max-width:768px){
+  .hdsk-grid--2,.hdsk-grid--3,.hdsk-grid--4,.hdsk-split{ grid-template-columns:1fr; }
+  .hdsk-split{ gap:28px; }
+  .hdsk-sec__head{ margin-bottom:28px; }
+  .hdsk-btnrow .hdsk-btn{ flex:1 1 100%; }
+}
+
+/* ── 카드 (G-04) ─────────────────────────────────────────── */
+.hdsk-card{ border:1px solid var(--line); border-radius:14px; padding:28px; background:#fff; display:flex; flex-direction:column; }
+.hdsk-card__head{ display:flex; align-items:center; gap:12px; }
+.hdsk-icon{ flex:none; width:32px; height:32px; border:1.5px solid var(--muted); border-radius:50%; }
+@media (max-width:768px){ .hdsk-card{ padding:22px; } }
+
+/* ── 단계(절차) ──────────────────────────────────────────── */
+.hdsk-steps{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:16px; counter-reset:st; list-style:none; margin:0; padding:0; }
+.hdsk-step{ border-top:2px solid var(--ink); padding-top:16px; }
+.hdsk-step__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); }
+@media (max-width:768px){
+  .hdsk-steps{ grid-auto-flow:row; gap:0; }
+  .hdsk-step{ border-top:0; border-left:2px solid var(--ink); padding:0 0 22px 18px; }
+}
+
+/* ── 이미지 자리 (G-06) : X 박스 + 필요 자료 이름 ───────────── */
+.hdsk-ph{ position:relative; width:100%; aspect-ratio:var(--ratio,16/9); background:var(--soft2); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; }
+.hdsk-ph::before,.hdsk-ph::after{ content:""; position:absolute; inset:0;
+  background:linear-gradient(to top right,transparent calc(50% - .5px),#c4c4c4 50%,transparent calc(50% + .5px)); }
+.hdsk-ph::after{ background:linear-gradient(to top left,transparent calc(50% - .5px),#c4c4c4 50%,transparent calc(50% + .5px)); }
+.hdsk-ph > span{ position:relative; z-index:1; background:var(--soft2); padding:4px 10px; font-size:13px; line-height:1.4; color:var(--sub); font-weight:600; max-width:90%; }
+.hdsk-logo-ph{ --ratio:3/1; border-radius:6px; }
+
+/* ── 폼 (G-05) ───────────────────────────────────────────── */
+.hdsk-form{ display:grid; gap:20px; max-width:720px; }
+.hdsk-field label,.hdsk-field .hdsk-flabel{ display:block; font-weight:700; margin-bottom:8px; font-size:var(--fs-body); }
+.hdsk-req{ color:var(--ink); margin-left:2px; }
+.hdsk-input{ width:100%; min-height:52px; border:1px solid var(--muted); border-radius:8px; padding:12px 14px; font:inherit; color:var(--muted); background:#fff; display:flex; align-items:center; }
+.hdsk-input--area{ min-height:120px; align-items:flex-start; }
+.hdsk-input--select::after{ content:"▼"; margin-left:auto; font-size:12px; color:var(--sub); }
+.hdsk-hint{ font-size:13px; color:var(--muted); margin-top:6px; line-height:1.5; }
+.hdsk-choices{ display:flex; flex-wrap:wrap; gap:10px; }
+.hdsk-choice{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 14px; border:1px solid var(--muted); border-radius:8px; font-size:var(--fs-body); }
+.hdsk-choice::before{ content:""; width:16px; height:16px; border:1.5px solid var(--sub); border-radius:50%; }
+.hdsk-choices--check .hdsk-choice::before{ border-radius:3px; }
+.hdsk-consent{ display:flex; gap:10px; align-items:flex-start; }
+.hdsk-consent::before{ content:""; flex:none; width:18px; height:18px; margin-top:3px; border:1.5px solid var(--sub); border-radius:3px; }
+
+/* ── 헤더 (G-H) ──────────────────────────────────────────── */
+.hdsk-header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line); }
+.hdsk-header__in{ max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter); height:76px; display:flex; align-items:center; gap:32px; }
+.hdsk-header__logo{ width:170px; flex:none; }
+.hdsk-header__logo .hdsk-ph{ --ratio:17/5; border-radius:4px; }
+.hdsk-header__logo .hdsk-ph > span{ font-size:11px; padding:2px 6px; }
+.hdsk-gnb{ display:flex; gap:28px; margin-left:auto; }
+.hdsk-gnb a{ text-decoration:none; font-weight:600; font-size:16px; }
+.hdsk-gnb a[aria-current]{ font-weight:800; border-bottom:2px solid var(--ink); }
+.hdsk-header__util{ display:flex; align-items:center; gap:18px; }
+.hdsk-header__util .hdsk-btn{ min-height:44px; padding:0 20px; font-size:15px; }
+.hdsk-header__login{ font-size:14px; color:var(--sub); text-decoration:none; }
+.hdsk-burger{ display:none; margin-left:auto; width:44px; height:44px; border:1px solid var(--line); border-radius:8px; background:#fff; font-size:20px; }
+.hdsk-mpanel{ display:none; }
+@media (max-width:768px){
+  .hdsk-header__in{ height:60px; gap:12px; }
+  .hdsk-header__logo{ width:130px; }
+  .hdsk-gnb,.hdsk-header__util{ display:none; }
+  .hdsk-burger{ display:block; }
+  .hdsk-mpanel.is-open{ display:block; position:fixed; inset:60px 0 0; background:#fff; z-index:49; padding:24px var(--gutter); overflow:auto; }
+  .hdsk-mpanel a.hdsk-mnav{ display:block; padding:14px 0; font-size:20px; font-weight:700; text-decoration:none; border-bottom:1px solid var(--line); }
+  .hdsk-mpanel .hdsk-btn{ width:100%; margin-top:12px; }
+}
+
+/* ── 푸터 (G-F) ──────────────────────────────────────────── */
+.hdsk-footer{ background:var(--soft2); padding:56px 0; font-size:14px; line-height:1.8; color:var(--sub); }
+.hdsk-footer .hdsk-logo-ph{ width:180px; margin-bottom:16px; }
+.hdsk-footer p{ margin:0; }
+.hdsk-footer__links{ display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; }
+
+/* ── 모바일 하단 고정 바 (G-08) ─────────────────────────── */
+.hdsk-mbar{ display:none; }
+@media (max-width:768px){
+  .hdsk-mbar{ display:flex; position:fixed; left:0; right:0; bottom:0; z-index:60; height:var(--bar-h); background:#fff; border-top:1px solid var(--line); }
+  .hdsk-mbar a{ flex:1; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; text-decoration:none; }
+  .hdsk-mbar a + a{ background:var(--ink); color:#fff; }
+}
+
+/* ══════════════════ 와이어 전용 표시 (메모·상태·ID) ══════════════════ */
+.w-bar{ background:#2b2b2b; color:#fff; font-size:12px; line-height:1.5; }
+.w-bar__in{ max-width:var(--maxw); margin:0 auto; padding:8px var(--gutter); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; }
+.w-bar strong{ font-weight:800; }
+.w-bar a{ color:#ddd; text-decoration:none; }
+.w-bar a[aria-current]{ color:#fff; text-decoration:underline; }
+.w-bar button{ margin-left:auto; font:inherit; font-size:12px; background:#fff; color:#222; border:0; border-radius:4px; padding:4px 10px; cursor:pointer; }
+.w-id{ position:absolute; top:12px; left:12px; z-index:5; font:700 12px/1.4 ui-monospace,Menlo,monospace; background:var(--ink); color:#fff; padding:3px 8px; border-radius:4px; }
+.w-note{ margin:16px 0 0; padding:12px 14px; border:1px dashed #999; border-radius:6px; background:#fafafa; font-size:13px; line-height:1.6; color:#444; }
+.w-note::before{ content:"기획 메모 · "; font-weight:800; }
+[data-st]{ position:relative; }
+[data-st]::after{ content:attr(data-st); position:absolute; top:-18px; right:0; font:700 10px/1.4 ui-monospace,Menlo,monospace; color:#fff; background:#888; padding:1px 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
+[data-st="대기"]::after{ background:#444; }
+body.notes-off .w-note,body.notes-off .w-id,body.notes-off [data-st]::after{ display:none; }
+
+@media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important; } }

@@ -1,0 +1,80 @@
+<!doctype html>
+<!-- ⚠ 참고용 — 구현 코드로 재사용 금지 (저충실도 와이어 v0.1 · 핸드쉐이크 회사 소개 · 기획안 4-2) -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[와이어] 회사 소개 — 핸드쉐이크</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="wire.css">
+<style>
+  .a-why{ display:grid; grid-template-columns:160px 1fr; gap:0; border-top:2px solid var(--ink); }
+  .a-why > *{ padding:24px 0; border-bottom:1px solid var(--line); margin:0; }
+  .a-why dt{ font-size:var(--fs-card-title); font-weight:800; }
+  .a-why dd{ font-size:var(--fs-lead); line-height:1.6; }
+  @media (max-width:768px){ .a-why{ grid-template-columns:1fr; } .a-why dt{ border-bottom:0; padding-bottom:4px; } .a-why dd{ padding-top:0; } }
+</style>
+</head>
+<body data-page="about">
+
+<!-- A-01 브랜드 철학 · 브랜드 소개 -->
+<section class="hdsk-sec" id="A-01" style="border-top:0">
+  <span class="w-id">A-01 브랜드 소개</span>
+  <div class="hdsk-wrap hdsk-split">
+    <div>
+      <p class="hdsk-eyebrow">회사 소개</p>
+      <h1 class="hdsk-h1" data-st="가안">병원 진료를 지키는 회사,<br class="brk-pc"> 핸드쉐이크</h1>
+      <p class="hdsk-lead" data-st="대기">핸드쉐이크(HAND SHAKE)와 '병원 진료지킴이'라는 이름에 담긴 뜻 — 대표님 자료 대기</p>
+    </div>
+    <div class="hdsk-ph" style="--ratio:4/3"><span>브랜드 이미지 또는 로고</span></div>
+  </div>
+  <div class="hdsk-wrap"><p class="w-note">브랜드 이름의 의미는 받은 자료 어디에도 없다 → 대표님께 받아야 이 섹션 카피를 쓸 수 있다. h1 은 소개서 2쪽 "핸드쉐이크는 병원 진료를 지키는 회사입니다"에서.</p></div>
+</section>
+
+<!-- A-02 WHY · WHAT · HOW -->
+<section class="hdsk-sec hdsk-sec--soft" id="A-02">
+  <span class="w-id">A-02 WHY·WHAT·HOW</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">왜, 무엇을, 어떻게</h2></div>
+    <dl class="a-why">
+      <dt>WHY</dt><dd data-st="가안">병원 진료를 지키기 위해</dd>
+      <dt>WHAT</dt><dd data-st="가안">통신·보안·가전을 편리하게 납품하고, 신속하게 A/S 합니다</dd>
+      <dt>HOW</dt><dd data-st="가안">핵심가치 <b>신뢰 · 성장(개선)</b></dd>
+    </dl>
+    <p class="w-note">출처 : 소개서 2쪽. "핵심가치"라는 말은 사이트에서 여기에만 쓴다(교차 검토 2번). 소개서 HOW 에는 "강점 편리한 납품·신속한 AS"도 있으나 강점은 A-03 에서 다룬다.</p>
+  </div>
+</section>
+
+<!-- A-03 강점 + 상담 신청 버튼(G-07) -->
+<section class="hdsk-sec" id="A-03">
+  <span class="w-id">A-03 강점</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">신속한 A/S, 편리한 납품</h2></div>
+    <div class="hdsk-grid hdsk-grid--2">
+      <div>
+        <p class="hdsk-card-label">신속한 A/S</p>
+        <div class="hdsk-grid">
+          <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">진료 불가 시 당일 A/S</h3></div>
+            <p class="hdsk-body">진료가 멈추는 장애는 그날 바로 방문해 해결합니다.</p></div>
+          <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">토요일 근무</h3></div>
+            <p class="hdsk-body">토요일에 진료하는 병원에 맞춰 토요일에도 근무합니다.</p></div>
+        </div>
+      </div>
+      <div>
+        <p class="hdsk-card-label">편리한 납품</p>
+        <div class="hdsk-grid">
+          <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">CS관리방 운영</h3></div>
+            <p class="hdsk-body">병원별 관리방에서 납품 일정과 사후관리를 원장님께 보고합니다.</p></div>
+          <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">인테리어와 가장 가까운 소통</h3></div>
+            <p class="hdsk-body">공정표와 도면을 공유해 인테리어 일정에 맞춰 설치합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>
+    <p class="w-note">설명 문구 출처 : 소개서 5쪽. 조직도는 넣지 않는다(확정). 마지막 섹션이라 [상담 신청] 버튼(G-07).</p>
+  </div>
+</section>
+
+<script src="wire.js"></script>
+</body>
+</html>

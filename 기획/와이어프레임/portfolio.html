@@ -1,0 +1,63 @@
+<!doctype html>
+<!-- ⚠ 참고용 — 구현 코드로 재사용 금지 (저충실도 와이어 v0.1 · 핸드쉐이크 포트폴리오 · 기획안 4-4) -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[와이어] 포트폴리오 — 핸드쉐이크</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="wire.css">
+<style>
+  .p-tabs{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .p-tabs span{ display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:999px; font-weight:600; }
+  .p-tabs span:first-child{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .p-logos{ display:flex; gap:20px; overflow:hidden; }
+  .p-logos .hdsk-ph{ flex:0 0 180px; --ratio:5/2; }
+  @media (max-width:768px){ .p-logos .hdsk-ph{ flex-basis:130px; } }
+</style>
+</head>
+<body data-page="portfolio">
+
+<!-- P-01 대표 포트폴리오 (아임웹 갤러리 위젯) -->
+<section class="hdsk-sec" id="P-01" style="border-top:0">
+  <span class="w-id">P-01 대표 포트폴리오</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head">
+      <p class="hdsk-eyebrow">포트폴리오</p>
+      <h1 class="hdsk-h1" data-st="가안">진료과별 납품 사례</h1>
+      <p class="hdsk-lead" data-st="가안">진료과마다 필요한 장비가 다릅니다. 실제 납품 현장을 확인해 보세요.</p>
+    </div>
+    <div class="p-tabs" data-st="가안"><span>전체</span><span>내과</span><span>정형외과</span><span>피부과</span><span>치과</span><span>…</span></div>
+    <div class="hdsk-grid hdsk-grid--3">
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+    </div>
+    <p class="hdsk-body" style="margin-top:28px"><a class="hdsk-link" href="#" data-st="가안">더 많은 납품 사례는 네이버 블로그에서 →</a></p>
+    <p class="w-note"><b>아임웹 갤러리 위젯</b>(코드 위젯 아님, 1-4). 진료과 탭은 갤러리 위젯이 지원할 때만. 진료과 목록은 대표님 확인(고객확인_폼항목과 같은 목록). 과별 3~5건(미팅). 클릭 시 상세는 게시판형(미팅).</p>
+  </div>
+</section>
+
+<!-- P-02 협력사 로고 흐름 + 상담 신청 버튼(G-07) -->
+<section class="hdsk-sec hdsk-sec--soft" id="P-02">
+  <span class="w-id">P-02 협력사</span>
+  <div class="hdsk-wrap">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">함께하는 파트너</h2></div>
+  </div>
+  <div class="p-logos">
+    <div class="hdsk-ph"><span>협력사 로고</span></div><div class="hdsk-ph"><span>협력사 로고</span></div><div class="hdsk-ph"><span>협력사 로고</span></div>
+    <div class="hdsk-ph"><span>협력사 로고</span></div><div class="hdsk-ph"><span>협력사 로고</span></div><div class="hdsk-ph"><span>협력사 로고</span></div>
+    <div class="hdsk-ph"><span>협력사 로고</span></div><div class="hdsk-ph"><span>협력사 로고</span></div>
+  </div>
+  <div class="hdsk-wrap">
+    <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>
+    <p class="w-note">로고 띠가 옆으로 아주 느리게 흐른다(마퀴). 마우스를 올리면 멈춤, 움직임 줄이기 설정이면 정지. 로고 8개 미만이면 흐르지 않고 한 줄 정렬. 화면 밖이면 멈춤(3번). 로고 파일·노출 동의 [대기]. 마지막 섹션이라 [상담 신청] 버튼(G-07).</p>
+  </div>
+</section>
+
+<script src="wire.js"></script>
+</body>
+</html>
