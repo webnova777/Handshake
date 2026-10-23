@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- ⚠ 참고용 — 구현 코드로 재사용 금지 (저충실도 와이어 v0.1 · 핸드쉐이크 메인 · 기획안 4-1) -->
+<!-- ⚠ 참고용 — 구현 코드로 재사용 금지 (와이어 v0.2 흐름 보기 · 핸드쉐이크 메인 · 상세기획 01_메인.md · 동작은 00_인터랙션맵.md 의 I- 번호) -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -8,159 +8,246 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="wire.css">
 <style>
-  .m-hero{ position:relative; padding:0; border-top:0; }
-  .m-hero__bg{ position:absolute; inset:0; }
-  .m-hero__bg .hdsk-ph{ height:100%; aspect-ratio:auto; border-radius:0; border:0; }
-  .m-hero__bg .hdsk-ph{ align-items:flex-end; justify-content:flex-end; padding:16px; }   /* 자리 표시 글자가 문구 상자를 가리지 않게 */
-  .m-hero__in{ position:relative; min-height:680px; display:flex; flex-direction:column; justify-content:center; padding-top:80px; padding-bottom:80px; }
+  /* M-01 히어로 — 헤더가 위에 겹친다(관리자 설정, 1-5) */
+  .m-hero{ position:relative; padding:0; border-top:0; margin-top:-76px; }
+  .m-hero__bg{ position:absolute; inset:0; overflow:hidden; }
+  .m-hero__bg .hdsk-ph{ height:100%; aspect-ratio:auto; border-radius:0; border:0; align-items:flex-end; justify-content:flex-end; padding:16px; }
+  .m-hero__in{ position:relative; min-height:760px; display:flex; flex-direction:column; justify-content:center; padding-top:156px; padding-bottom:80px; }
   .m-hero__in > *{ max-width:720px; }
   .m-hero__copy{ background:rgba(255,255,255,.88); padding:32px; border-radius:10px; }
-  .m-scene{ display:grid; grid-template-columns:5fr 7fr; gap:48px; align-items:center; padding:40px 0; border-top:1px dashed var(--line); }
-  .m-scene:first-of-type{ border-top:0; }
+  .m-hero .hdsk-h1 .w-line{ display:block; }
+
+  /* M-01 일하는 과정 — 장면 4개. 기본은 세로 나열(모바일 · 움직임 줄이기 · JS 꺼짐)
+     데스크톱 동작이 켜지면 motion.js 가 .is-stage 를 붙여 한 자리에 겹쳐 두고 바꾼다(I-01) */
+  .m-flow .hdsk-sec__head{ max-width:none; }
+  .m-stage{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; row-gap:28px; }
+  .m-scenes{ grid-column:1 / -1; display:grid; }
+  .m-scene{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; align-items:center; padding:40px 0; border-top:1px solid var(--line); }
+  .m-scene:first-child{ border-top:0; padding-top:0; }
+  .m-scene__text{ grid-column:1 / 6; }
+  .m-scene__visual{ grid-column:6 / 13; }
+  .m-scene__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); margin:0 0 10px; }
+  .m-scene .hdsk-card-title{ font-size:32px; }
+  .m-dots{ grid-column:1 / 6; display:none; gap:8px; }
+  .is-stage .m-scene{ grid-area:1 / 1; padding:0; border-top:0; }
+  .is-stage .m-dots{ display:flex; }
+  .m-dot{ flex:1; font:inherit; font-size:13px; font-weight:700; color:var(--sub); text-align:left; background:none; border:0; padding:10px 0 0; min-height:44px; cursor:pointer; position:relative; }
+  .m-dot::before,.m-dot::after{ content:""; position:absolute; left:0; right:0; top:0; height:3px; background:var(--line); }
+  .m-dot::after{ background:var(--ink); transform-origin:left; transform:scaleX(var(--fill,0)); }
+  .m-dot[aria-current="step"]{ color:var(--ink); }
+  .w-big{ position:relative; z-index:1; display:block; font-size:120px; font-weight:800; line-height:1; color:#d2d2d2; letter-spacing:-.04em; }
   @media (max-width:768px){
-    .m-hero__in{ min-height:0; padding-top:56px; padding-bottom:56px; }
+    .m-hero{ margin-top:-60px; }
+    .m-hero__in{ min-height:0; padding-top:116px; padding-bottom:56px; }
     .m-hero__copy{ padding:22px; }
-    .m-scene{ grid-template-columns:1fr; gap:18px; padding:28px 0; }
+    .m-scene{ grid-template-columns:1fr; row-gap:18px; padding:28px 0; }
+    .m-scene__text,.m-scene__visual{ grid-column:1; }
+    .m-scene .hdsk-card-title{ font-size:var(--fs-card-title); }
+    .w-big{ font-size:64px; }
   }
+
+  /* M-03 B2 — 목록 + 바뀌는 사진(I-06) */
+  .m-svc2{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; align-items:start; }
+  .m-svc2__list{ grid-column:1 / 6; list-style:none; margin:0; padding:0; border-top:1px solid var(--ink); }
+  .m-svc2__item{ display:grid; grid-template-columns:44px 1fr 24px; column-gap:12px; align-items:baseline; padding:22px 0; border-bottom:1px solid var(--line); text-decoration:none; }
+  .m-svc2__item .hdsk-body{ grid-column:2; margin-top:4px; }
+  .m-svc2__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); }
+  .m-svc2__arrow{ grid-column:3; grid-row:1; transition:transform .24s cubic-bezier(.34,.02,.16,1); }
+  .m-svc2__item:hover .m-svc2__arrow,.m-svc2__item:focus-visible .m-svc2__arrow{ transform:translateX(4px); }
+  .m-svc2__item.is-on .hdsk-card-title{ text-decoration:underline; text-underline-offset:6px; }
+  .m-svc2__mimg{ display:none; }
+  .m-svc2__media{ grid-column:6 / 13; display:grid; }
+  .m-svc2__media .hdsk-ph{ grid-area:1 / 1; --ratio:4/3; opacity:0; transition:opacity 1.1s cubic-bezier(.34,.02,.16,1); }
+  .m-svc2__media .hdsk-ph.is-on{ opacity:1; }
+  @media (max-width:768px){
+    .m-svc2{ grid-template-columns:1fr; }
+    .m-svc2__list{ grid-column:1; }
+    .m-svc2__media{ display:none; }
+    .m-svc2__mimg{ display:flex; grid-column:1 / -1; margin-top:14px; --ratio:16/9; }
+  }
+
+  /* M-06 상담 CTA — 흐르는 띠(I-07) */
+  .m-cta{ overflow:hidden; }
+  .m-cta .w-marquee{ margin:0 0 56px; }
+  @media (max-width:768px){ .m-cta .w-marquee{ margin-bottom:32px; } }
 </style>
 </head>
-<body data-page="main">
+<body data-page="main" data-wire="와이어 v0.2 · 메인 흐름 보기" data-motion>
 
-<!-- M-01 히어로 + 일하는 과정 모션그래픽 -->
+<!-- M-01 히어로 — I-09 : 스크롤·스크립트 없이 CSS 로 로드 즉시 재생(1-1) -->
 <section class="hdsk-sec m-hero" id="M-01">
-  <span class="w-id">M-01 히어로</span>
-  <div class="m-hero__bg"><div class="hdsk-ph"><span>히어로 배경 — 표현 방식 미정(캐릭터 / 인포그래픽 / 실사·AI)</span></div></div>
+  <span class="w-id">M-01 히어로 · I-09</span>
+  <div class="m-hero__bg"><div class="hdsk-ph w-hero-bg"><span>히어로 배경 — 표현 방식 미정(캐릭터 / 인포그래픽 / 실사·AI)</span></div></div>
   <div class="hdsk-wrap m-hero__in">
     <div class="m-hero__copy">
-      <p class="hdsk-eyebrow" data-st="가안">병원 통신·보안·가전 솔루션</p>
-      <h1 class="hdsk-h1" data-st="가안">편리하게 납품하고<br class="brk-pc"> 신속하게 지킵니다</h1>
-      <p class="hdsk-lead" data-st="가안">병원 진료를 지키기 위해, 계약부터 설치, 개원 후 A/S까지 핸드쉐이크가 책임집니다.</p>
-      <div class="hdsk-btnrow">
+      <p class="hdsk-eyebrow w-hero-in" style="--d:.1s" data-st="가안">병원 통신·보안·가전 솔루션</p>
+      <h1 class="hdsk-h1" data-st="가안"><span class="w-line"><span class="w-line__in w-hero-in" style="--d:.22s">편리하게 납품하고</span></span><span class="w-line"><span class="w-line__in w-hero-in" style="--d:.34s">신속하게 지킵니다</span></span></h1>
+      <p class="hdsk-lead w-hero-in" style="--d:.46s" data-st="가안">병원 진료를 지키기 위해, 계약부터 설치, 개원 후 A/S까지 핸드쉐이크가 책임집니다.</p>
+      <div class="hdsk-btnrow w-hero-in" style="--d:.68s">
         <a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a>
         <a class="hdsk-btn hdsk-btn--secondary" href="#M-01-scenes">일하는 과정 보기 ↓</a>
       </div>
     </div>
-    <p class="w-note">헤더는 이 섹션 위에서 투명(겹침) → 스크롤하면 흰 배경. 첫 화면은 로드와 동시에 등장(스크롤 감지 없음, CLAUDE.md 1-1). 모바일에서 높이를 화면 높이에 걸지 않는다(2번).</p>
+    <p class="w-note">헤더는 이 섹션 위에서 투명(겹침, 1-5) → 내려가면 흰 배경. 아래로 스크롤하면 헤더가 숨고, 위로 올리면 나타난다. h1 은 <b>줄마다 상자</b>(3-A) — 데스크톱·모바일 모두 2줄로 고정. 배경 사진은 크게 시작해 2.4초에 걸쳐 가라앉는다(히어로 속도는 프로젝트사양 6번 [미정] — 와이어 임시값).</p>
   </div>
 </section>
 
-<section class="hdsk-sec" id="M-01-scenes">
-  <span class="w-id">M-01 장면</span>
+<!-- M-01 일하는 과정 — I-01 고정 무대 (데스크톱) -->
+<section class="hdsk-sec m-flow" id="M-01-scenes" data-i="I-01">
+  <span class="w-id">M-01 일하는 과정 · I-01</span>
   <div class="hdsk-wrap">
-    <div class="hdsk-sec__head">
-      <h2 class="hdsk-h2" data-st="가안">계약부터 사후관리까지, 한 업체가 끝까지</h2>
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">계약부터 사후관리까지, 한 업체가 끝까지</h2></div>
+    <div class="m-stage">
+      <div class="m-scenes">
+        <article class="m-scene">
+          <div class="m-scene__text"><p class="m-scene__no">1 / 4</p><h3 class="hdsk-card-title">계약</h3>
+            <p class="hdsk-body" data-st="가안">상담·설계·조율을 마치고 한 번의 계약으로 전 품목을 진행합니다.</p></div>
+          <div class="m-scene__visual"><div class="hdsk-ph"><b class="w-big">01</b><span>장면 1 비주얼 — 계약 [대기]</span></div></div>
+        </article>
+        <article class="m-scene">
+          <div class="m-scene__text"><p class="m-scene__no">2 / 4</p><h3 class="hdsk-card-title">사전작업</h3>
+            <p class="hdsk-body" data-st="가안">인테리어 공정표·도면 공유, 번호 채번, 기기 제원 송부, 수도 설비 사전 체크.</p></div>
+          <div class="m-scene__visual"><div class="hdsk-ph"><b class="w-big">02</b><span>장면 2 비주얼 — 사전작업 [대기]</span></div></div>
+        </article>
+        <article class="m-scene">
+          <div class="m-scene__text"><p class="m-scene__no">3 / 4</p><h3 class="hdsk-card-title">납품</h3>
+            <p class="hdsk-body" data-st="가안">인테리어 공정에 맞춰 네트워크 → 통신사 개통 → PC·전화 셋팅 → 보안 → 가전을 한 일정표로.</p></div>
+          <div class="m-scene__visual"><div class="hdsk-ph"><b class="w-big">03</b><span>장면 3 비주얼 — 납품 [대기]</span></div></div>
+        </article>
+        <article class="m-scene">
+          <div class="m-scene__text"><p class="m-scene__no">4 / 4</p><h3 class="hdsk-card-title">사후관리</h3>
+            <p class="hdsk-body" data-st="가안">CS관리방 운영, 진료 불가 시 당일 A/S, 원격으로 먼저 확인합니다.</p></div>
+          <div class="m-scene__visual"><div class="hdsk-ph"><b class="w-big">04</b><span>장면 4 비주얼 — 사후관리 [대기]</span></div></div>
+        </article>
+      </div>
+      <div class="m-dots" aria-label="장면 이동">
+        <button class="m-dot" type="button">계약</button><button class="m-dot" type="button">사전작업</button><button class="m-dot" type="button">납품</button><button class="m-dot" type="button">사후관리</button>
+      </div>
     </div>
-    <div class="m-scene">
-      <div><p class="hdsk-card-label">1 / 4</p><h3 class="hdsk-card-title" data-st="가안">계약</h3>
-        <p class="hdsk-body">상담·설계·조율을 마치고 한 번의 계약으로 전 품목을 진행합니다.</p></div>
-      <div class="hdsk-ph"><span>장면 1 — 계약</span></div>
-    </div>
-    <div class="m-scene">
-      <div><p class="hdsk-card-label">2 / 4</p><h3 class="hdsk-card-title" data-st="가안">사전작업</h3>
-        <p class="hdsk-body">인테리어 공정표·도면 공유, 번호 채번, 기기 제원 송부, 수도 설비 사전 체크.</p></div>
-      <div class="hdsk-ph"><span>장면 2 — 사전작업</span></div>
-    </div>
-    <div class="m-scene">
-      <div><p class="hdsk-card-label">3 / 4</p><h3 class="hdsk-card-title" data-st="가안">납품</h3>
-        <p class="hdsk-body">인테리어 공정에 맞춰 네트워크 → 통신사 개통 → PC·전화 셋팅 → 보안 → 가전을 한 일정표로.</p></div>
-      <div class="hdsk-ph"><span>장면 3 — 납품</span></div>
-    </div>
-    <div class="m-scene">
-      <div><p class="hdsk-card-label">4 / 4</p><h3 class="hdsk-card-title" data-st="가안">사후관리</h3>
-        <p class="hdsk-body">CS관리방 운영, 진료 불가 시 당일 A/S, 원격으로 먼저 확인합니다.</p></div>
-      <div class="hdsk-ph"><span>장면 4 — 사후관리</span></div>
-    </div>
-    <p class="w-note">데스크톱 : 화면에 고정된 채 스크롤에 따라 장면 1→4 교체(겹쳐 전환). 모바일 : 지금처럼 세로로 나열해도 이해되게. 움직임 줄이기 설정이면 정지 4장.</p>
   </div>
 </section>
 
-<!-- M-02 원장님이 얻는 것 3가지 -->
-<section class="hdsk-sec hdsk-sec--soft" id="M-02">
-  <span class="w-id">M-02 얻는 것 3</span>
+<!-- M-02 원장님이 얻는 것 3가지 — I-02 : 고정 무대를 덮으며 올라온다 -->
+<section class="hdsk-sec hdsk-sec--soft" id="M-02" data-i="I-02">
+  <span class="w-id">M-02 얻는 것 3 · I-02 덮기</span>
   <div class="hdsk-wrap">
-    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">맡기시면 달라지는 세 가지</h2></div>
-    <div class="hdsk-grid hdsk-grid--3">
-      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">시간 절약</h3></div>
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">맡기시면 달라지는 세 가지</h2></div>
+    <div class="hdsk-grid hdsk-grid--3" data-rv-group>
+      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">시간 절약</h3></div>
         <p class="hdsk-body">업체 8곳을 따로 부를 필요 없이, 한 곳에서 끝냅니다.</p></div>
-      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="대기">추가 비용 걱정을 덜어 드립니다</h3></div>
+      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="대기">추가 비용 걱정을 덜어 드립니다</h3></div>
         <p class="hdsk-body">보안 가입 시 네트워크 무상 방문 A/S — 인터넷이 끊겨도 비용 걱정 없이 부르세요.</p></div>
-      <div class="hdsk-card"><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">정확한 가이드</h3></div>
+      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title" data-st="가안">정확한 가이드</h3></div>
         <p class="hdsk-body">진료과와 병원 규모에 맞춘 품목을 제안합니다.</p></div>
     </div>
-    <p class="w-note">② 비용 절감 : 무상 A/S 기간(평생/3년)·조건 범위 확인 후 확정. 아이콘은 선 아이콘 한 세트, 제목 왼쪽(5-2 #8).</p>
+    <p class="w-note">데스크톱 : 앞 장면 4 가 멈춘 채로 이 섹션이 아래에서 덮고 올라온다. 덮이는 동안 앞 무대는 살짝 작아지고 어두워진다. 모바일은 일반 스크롤. 제목은 줄마다 밑에서 올라오고(I-03), 카드는 0.12초 간격으로 겹쳐 등장.</p>
   </div>
 </section>
 
-<!-- M-03 서비스 요약 -->
+<!-- M-03 서비스 요약 — 배치 B1 / B2 비교용 스위치(도구 막대). 확정되면 한쪽을 지운다 -->
 <section class="hdsk-sec" id="M-03">
   <span class="w-id">M-03 서비스 요약</span>
   <div class="hdsk-wrap">
-    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">개원에 필요한 장비, 한 곳에서</h2></div>
-    <div class="hdsk-grid hdsk-grid--3">
-      <a class="hdsk-card" href="service.html#S-01" style="text-decoration:none">
-        <div class="hdsk-ph" style="--ratio:4/3"><span>통신 대표 사진</span></div>
-        <p class="hdsk-card-label" style="margin-top:18px">통신사 · 네트워크 · PC·주변기기</p>
-        <h3 class="hdsk-card-title" data-st="가안">통신</h3>
-        <p class="hdsk-body">하나의 밸류체인으로 안전하고 편리하게</p></a>
-      <a class="hdsk-card" href="service.html#S-04" style="text-decoration:none">
-        <div class="hdsk-ph" style="--ratio:4/3"><span>보안 대표 사진</span></div>
-        <p class="hdsk-card-label" style="margin-top:18px">무인경비 · CCTV</p>
-        <h3 class="hdsk-card-title" data-st="가안">보안</h3>
-        <p class="hdsk-body">인테리어를 흐트러뜨리지 않고 병원을 지킵니다</p></a>
-      <a class="hdsk-card" href="service.html#S-05" style="text-decoration:none">
-        <div class="hdsk-ph" style="--ratio:4/3"><span>가전 대표 사진</span></div>
-        <p class="hdsk-card-label" style="margin-top:18px">디스플레이 · 생활가전</p>
-        <h3 class="hdsk-card-title" data-st="가안">가전</h3>
-        <p class="hdsk-body">인테리어와 협업하고, 납품 후에도 책임집니다</p></a>
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">개원에 필요한 장비, 한 곳에서</h2></div>
+
+    <div data-variant="M-03" data-v="B1" data-vlabel="B1 카드 3열">
+      <div class="hdsk-grid hdsk-grid--3" data-rv-group>
+        <a class="hdsk-card w-zoom" href="service.html#S-01" style="text-decoration:none" data-rv>
+          <div class="hdsk-ph" style="--ratio:4/3"><span>통신 대표 사진</span></div>
+          <p class="hdsk-card-label" style="margin-top:18px">통신사 · 네트워크 · PC·주변기기</p>
+          <h3 class="hdsk-card-title" data-st="가안">통신</h3>
+          <p class="hdsk-body">하나의 밸류체인으로 안전하고 편리하게</p></a>
+        <a class="hdsk-card w-zoom" href="service.html#S-04" style="text-decoration:none" data-rv>
+          <div class="hdsk-ph" style="--ratio:4/3"><span>보안 대표 사진</span></div>
+          <p class="hdsk-card-label" style="margin-top:18px">무인경비 · CCTV</p>
+          <h3 class="hdsk-card-title" data-st="가안">보안</h3>
+          <p class="hdsk-body">인테리어를 흐트러뜨리지 않고 병원을 지킵니다</p></a>
+        <a class="hdsk-card w-zoom" href="service.html#S-05" style="text-decoration:none" data-rv>
+          <div class="hdsk-ph" style="--ratio:4/3"><span>가전 대표 사진</span></div>
+          <p class="hdsk-card-label" style="margin-top:18px">디스플레이 · 생활가전</p>
+          <h3 class="hdsk-card-title" data-st="가안">가전</h3>
+          <p class="hdsk-body">인테리어와 협업하고, 납품 후에도 책임집니다</p></a>
+      </div>
+      <p class="w-note">B1 : 카드 3장이 0.12초 간격으로 등장, 마우스를 올리면 사진이 1.04배로 천천히 커진다(0.24초). 카드 전체가 링크.</p>
+    </div>
+
+    <div data-variant="M-03" data-v="B2" data-vlabel="B2 목록 + 바뀌는 사진" hidden>
+      <div class="m-svc2" data-i="I-06">
+        <ul class="m-svc2__list" data-rv-group>
+          <li data-rv><a class="m-svc2__item is-on" href="service.html#S-01"><span class="m-svc2__no">01</span><h3 class="hdsk-card-title">통신사</h3><span class="m-svc2__arrow">→</span><p class="hdsk-body" data-st="가안">번호 채번부터 배선·개통·전화기 셋팅까지</p><div class="hdsk-ph m-svc2__mimg"><span>통신사 사진</span></div></a></li>
+          <li data-rv><a class="m-svc2__item" href="service.html#S-02"><span class="m-svc2__no">02</span><h3 class="hdsk-card-title">네트워크</h3><span class="m-svc2__arrow">→</span><p class="hdsk-body" data-st="가안">원격 관리 장비, 장애 때는 임시 장비까지</p><div class="hdsk-ph m-svc2__mimg"><span>네트워크 사진</span></div></a></li>
+          <li data-rv><a class="m-svc2__item" href="service.html#S-03"><span class="m-svc2__no">03</span><h3 class="hdsk-card-title">PC 및 주변기기</h3><span class="m-svc2__arrow">→</span><p class="hdsk-body" data-st="가안">조립·설치부터 복합기·디스플레이 연결까지</p><div class="hdsk-ph m-svc2__mimg"><span>PC 사진</span></div></a></li>
+          <li data-rv><a class="m-svc2__item" href="service.html#S-04"><span class="m-svc2__no">04</span><h3 class="hdsk-card-title">보안</h3><span class="m-svc2__arrow">→</span><p class="hdsk-body" data-st="가안">인테리어 일정에 맞춘 무인경비·CCTV</p><div class="hdsk-ph m-svc2__mimg"><span>보안 사진</span></div></a></li>
+          <li data-rv><a class="m-svc2__item" href="service.html#S-05"><span class="m-svc2__no">05</span><h3 class="hdsk-card-title">가전</h3><span class="m-svc2__arrow">→</span><p class="hdsk-body" data-st="가안">디스플레이·생활가전 납품과 A/S 대행</p><div class="hdsk-ph m-svc2__mimg"><span>가전 사진</span></div></a></li>
+        </ul>
+        <div class="m-svc2__media" aria-hidden="true">
+          <div class="hdsk-ph is-on"><b class="w-big">01</b><span>통신사 사진</span></div>
+          <div class="hdsk-ph"><b class="w-big">02</b><span>네트워크 사진</span></div>
+          <div class="hdsk-ph"><b class="w-big">03</b><span>PC 사진</span></div>
+          <div class="hdsk-ph"><b class="w-big">04</b><span>보안 사진</span></div>
+          <div class="hdsk-ph"><b class="w-big">05</b><span>가전 사진</span></div>
+        </div>
+      </div>
+      <p class="w-note">B2 : 서비스 페이지 5개 섹션(S-01~S-05)과 1:1. 데스크톱은 목록(1~5열)에 마우스·키보드 포커스가 가면 오른쪽 사진(6~12열, 4:3)이 1.1초에 걸쳐 겹쳐 바뀐다. 모바일은 항목마다 사진(16:9)이 글 아래 붙는다 — 마우스가 없어도 정보가 다 보인다.</p>
     </div>
     <p class="hdsk-body" style="margin-top:24px" data-st="가안">진료과·병원 규모에 맞춰 필요한 품목만 골라 구성하실 수 있습니다.</p>
-    <p class="w-note">카드 전체가 링크 → 서비스 페이지 해당 섹션. 품목 이름은 G-01 이름표.</p>
   </div>
 </section>
 
-<!-- M-04 대표 포트폴리오 (아임웹 갤러리 위젯) -->
+<!-- M-04 대표 포트폴리오 (아임웹 갤러리 위젯) — 제목만 I-03 -->
 <section class="hdsk-sec hdsk-sec--soft" id="M-04">
   <span class="w-id">M-04 대표 포트폴리오</span>
   <div class="hdsk-wrap">
-    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">진료과별 납품 사례</h2></div>
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">진료과별 납품 사례</h2></div>
     <div class="hdsk-grid hdsk-grid--3">
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
       <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
       <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
       <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
     </div>
     <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--secondary" href="portfolio.html" data-st="가안">포트폴리오 전체 보기</a></div>
-    <p class="w-note">이 섹션은 <b>아임웹 갤러리 위젯</b>(코드 위젯 아님) — 우리 CSS 가 안 걸린다(1-4). 메인에 몇 건 보일지 [결정 필요]. 사진·병원명 노출 동의 [대기].</p>
+    <p class="w-note">이 섹션은 <b>아임웹 갤러리 위젯</b>(코드 위젯 아님) — 우리 CSS 가 안 걸려(1-4) 사진은 움직이지 않는다. 제목만 줄 단위 등장. 6건 3×2 / 모바일 2×3 [확인 대기].</p>
   </div>
 </section>
 
-<!-- M-05 상담 절차 -->
+<!-- M-05 상담 절차 — I-08 선 그어지기 -->
 <section class="hdsk-sec" id="M-05">
-  <span class="w-id">M-05 상담 절차</span>
+  <span class="w-id">M-05 상담 절차 · I-08</span>
   <div class="hdsk-wrap">
-    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-st="가안">상담 신청 후, 이렇게 진행됩니다</h2></div>
-    <ol class="hdsk-steps">
+    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">상담 신청 후, 이렇게 진행됩니다</h2></div>
+    <ol class="hdsk-steps" data-i="I-08">
       <li class="hdsk-step"><span class="hdsk-step__no">01</span><h3 class="hdsk-card-title">상담</h3><p class="hdsk-body">전화로 먼저 상황을 여쭙니다</p></li>
       <li class="hdsk-step"><span class="hdsk-step__no">02</span><h3 class="hdsk-card-title">상담양식</h3><p class="hdsk-body">필요한 내용을 양식으로 받습니다</p></li>
       <li class="hdsk-step"><span class="hdsk-step__no">03</span><h3 class="hdsk-card-title">초안</h3><p class="hdsk-body">품목 구성 초안을 드립니다</p></li>
       <li class="hdsk-step"><span class="hdsk-step__no">04</span><h3 class="hdsk-card-title">미팅</h3><p class="hdsk-body">초안을 놓고 함께 봅니다</p></li>
       <li class="hdsk-step"><span class="hdsk-step__no">05</span><h3 class="hdsk-card-title">최종조율</h3><p class="hdsk-body">품목과 일정을 확정합니다</p></li>
     </ol>
-    <p class="w-note">단계 이름·설명 모두 [가안 — 대표님 재확인 예정]. 이 절차가 끝나면 M-01 의 "계약"으로 이어진다. 상담 신청 C-01 과 같은 단계·이름.</p>
+    <p class="w-note">선이 왼쪽→오른쪽(모바일 위→아래)으로 1.2초에 그어지고, 선이 지나가는 순서대로 단계가 나타난다. 단계 이름·설명 [가안 — 대표님 재확인 예정]. 이 절차가 끝나면 M-01 의 "계약"으로 이어진다.</p>
   </div>
 </section>
 
-<!-- M-06 상담 CTA -->
-<section class="hdsk-sec hdsk-sec--soft" id="M-06">
-  <span class="w-id">M-06 상담 CTA</span>
+<!-- M-06 상담 CTA — I-07 흐르는 띠 -->
+<section class="hdsk-sec hdsk-sec--soft m-cta" id="M-06">
+  <span class="w-id">M-06 상담 CTA · I-07</span>
+  <div class="w-marquee" aria-hidden="true" data-st="가안"><div class="w-marquee__track">
+    <span>신뢰</span><i>·</i><span>신속</span><i>·</i><span>편리</span><i>·</i><span>병원 진료지킴이</span><i>·</i>
+    <span>신뢰</span><i>·</i><span>신속</span><i>·</i><span>편리</span><i>·</i><span>병원 진료지킴이</span><i>·</i>
+  </div></div>
   <div class="hdsk-wrap" style="text-align:center">
-    <h2 class="hdsk-h2" data-st="가안" style="max-width:760px;margin:0 auto">개원 준비부터 개원 후까지, 핸드쉐이크가 함께합니다</h2>
-    <div class="hdsk-btnrow" style="justify-content:center"><a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>
+    <h2 class="hdsk-h2" data-split data-st="가안" style="max-width:760px;margin:0 auto">개원 준비부터 개원 후까지, 핸드쉐이크가 함께합니다</h2>
+    <div class="hdsk-btnrow" style="justify-content:center" data-rv data-rv-d=".22"><a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>
     <p class="hdsk-body" data-st="대기" style="display:inline-block;margin-top:24px">전화 (G-02) · 메일 (G-02) · 영업시간 (G-02)</p>
     <p class="hdsk-body"><a class="hdsk-link" href="as.html" data-st="가안">이미 함께하는 병원이신가요? A/S 접수 →</a></p>
-    <p class="w-note" style="text-align:left">연락처는 G-02 회사 정보표 하나에서 가져온다(푸터와 중복 — 둘 다 같은 값). 카카오톡 채널이 있으면 버튼 추가 [대기].</p>
+    <p class="w-note" style="text-align:left">띠 글자는 아주 느리게 한 방향(한 바퀴 60초 — 와이어 임시값, 앰비언트 속도 [미정]), 마우스를 올리면 멈추고, 화면 밖이면 멈춘다(3번). 띠 문구는 ⑦ 카피에서 확정. 연락처는 G-02 회사 정보표.</p>
   </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="wire.js"></script>
+<script src="motion.js"></script>
 </body>
 </html>

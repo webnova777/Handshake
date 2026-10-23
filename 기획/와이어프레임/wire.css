@@ -169,4 +169,79 @@ img{ max-width:100%; }
 [data-st="대기"]::after{ background:#444; }
 body.notes-off .w-note,body.notes-off .w-id,body.notes-off [data-st]::after{ display:none; }
 
+/* ══════════════════ 와이어 동작 — 00_인터랙션맵.md 의 I- 부품 ══════════════════
+   값 : 프로젝트사양.md 6번(0.8초 · 이미지 1.1초 · 간격 0.12초 · 버튼 +0.22초 · 호버 0.24초 · 16px · 20%)
+   숨김 상태는 html.w-motion 일 때만 건다 — motion.js 가 붙인다. 실제 구현은 1-1·1-2 규칙을 따른다 */
+:root{ --ease:cubic-bezier(.34,.02,.16,1); }
+
+/* I-09 첫 화면 — CSS 만으로 로드 즉시(1-1). 동작 끄기·움직임 줄이기면 정지 */
+@keyframes w-rise{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
+@keyframes w-line-rise{ from{ transform:translateY(105%); } to{ transform:none; } }
+@keyframes w-settle{ from{ transform:scale(1.08); } to{ transform:none; } }
+.w-hero-in{ animation:w-rise .8s var(--ease) var(--d,0s) both; }
+.w-line .w-hero-in{ animation-name:w-line-rise; }
+.w-hero-bg{ animation:w-settle 2.4s var(--ease) both; }
+html.w-nomotion .w-hero-in,html.w-nomotion .w-hero-bg{ animation:none; }
+
+/* I-03 줄 단위 제목 — 줄마다 상자(3-A) */
+.w-line{ display:block; overflow:hidden; padding-bottom:.08em; margin-bottom:-.08em; }
+.w-line__in{ display:block; }
+html.w-motion [data-split] .w-line__in{ transform:translateY(105%); transition:transform .8s var(--ease); transition-delay:calc(var(--i,0) * .12s); }
+html.w-motion .is-in [data-split] .w-line__in,html.w-motion [data-split].is-in .w-line__in{ transform:none; }
+
+/* 기본 등장 — 카드·목록 */
+html.w-motion [data-rv]{ opacity:0; transform:translateY(16px); transition:opacity .8s var(--ease),transform .8s var(--ease); transition-delay:var(--rvd,0s); }
+html.w-motion .is-in [data-rv],html.w-motion [data-rv].is-in{ opacity:1; transform:none; }
+
+/* 호버 확대 — 사진 1 → 1.04 */
+.w-zoom .hdsk-ph > *,.w-zoom .hdsk-ph::before,.w-zoom .hdsk-ph::after{ transition:transform .24s var(--ease); }
+.w-zoom:hover .hdsk-ph::before,.w-zoom:hover .hdsk-ph::after{ transform:scale(1.04); }
+
+/* I-01 고정 무대 — 데스크톱에서 motion.js 가 .is-stage 를 붙인다 */
+.is-stage{ height:100vh; display:flex; flex-direction:column; justify-content:center; padding:108px 0 40px; border-top:0; z-index:1; background:var(--paper); }
+.is-stage .m-stage{ transform:scale(calc(1 - var(--cover,0) * .06)); transform-origin:50% 30%; }
+.is-stage::after{ content:""; position:absolute; inset:0; background:#000; opacity:calc(var(--cover,0) * .35); pointer-events:none; }
+.is-stage .m-scene__text > *{ opacity:0; transform:translateY(16px); transition:opacity .8s var(--ease),transform .8s var(--ease); }
+.is-stage .m-scene__visual{ opacity:0; transform:scale(1.04); transition:opacity 1.1s var(--ease),transform 1.1s var(--ease); }
+.is-stage .m-scene.is-on .m-scene__text > *{ opacity:1; transform:none; transition-delay:calc(.12s + var(--k,0) * .12s); }
+.is-stage .m-scene.is-on .m-scene__visual{ opacity:1; transform:none; transition-delay:.12s; }
+.is-stage .m-scene:not(.is-on){ pointer-events:none; }
+
+/* I-02 덮기 — 다음 섹션부터 무대 위로 */
+.w-cover{ margin-top:-100vh; z-index:2; }
+.w-cover ~ .hdsk-sec,.w-cover ~ .hdsk-footer{ position:relative; z-index:2; }
+.w-cover ~ .hdsk-sec:not(.hdsk-sec--soft){ background:var(--paper); }   /* 투명 배경이면 뒤에 남은 무대가 비친다 */
+
+/* I-08 선 그어지기 */
+html.w-motion .w-draw .hdsk-step{ border-color:var(--line); position:relative; }
+html.w-motion .w-draw .hdsk-step::before{ content:""; position:absolute; left:0; right:-16px; top:-2px; height:2px; background:var(--ink); transform:scaleX(0); transform-origin:left; transition:transform .24s linear; transition-delay:calc(var(--i) * .24s); }
+html.w-motion .w-draw .hdsk-step:last-child::before{ right:0; }
+html.w-motion .w-draw .hdsk-step > *{ opacity:0; transform:translateY(16px); transition:opacity .8s var(--ease),transform .8s var(--ease); transition-delay:calc(var(--i) * .24s + .1s); }
+html.w-motion .w-draw.is-in .hdsk-step::before{ transform:none; }
+html.w-motion .w-draw.is-in .hdsk-step > *{ opacity:1; transform:none; }
+@media (max-width:768px){
+  html.w-motion .w-draw .hdsk-step::before{ left:-2px; right:auto; top:0; bottom:0; width:2px; height:auto; transform:scaleY(0); transform-origin:top; }
+}
+
+/* I-07 흐르는 띠 */
+.w-marquee{ overflow:hidden; white-space:nowrap; font-size:96px; font-weight:800; line-height:1.1; letter-spacing:-.02em; color:#cfcfcf; }
+.w-marquee__track{ display:inline-flex; gap:.4em; animation:w-marquee 60s linear infinite; }
+.w-marquee__track i{ font-style:normal; }
+.w-marquee:hover .w-marquee__track,.w-marquee.is-paused .w-marquee__track,html.w-nomotion .w-marquee__track{ animation-play-state:paused; }
+@keyframes w-marquee{ to{ transform:translateX(-50%); } }
+@media (max-width:768px){ .w-marquee{ font-size:48px; } }
+
+/* 헤더 — 첫 화면 위 투명, 내려가면 숨고 올리면 나타남 */
+.hdsk-header{ transition:transform .4s var(--ease),background-color .24s,border-color .24s; }
+body[data-page="main"].is-top .hdsk-header{ background:transparent; border-color:transparent; }
+.hdsk-header.is-hidden{ transform:translateY(-100%); }
+
+/* Lenis 권장 CSS */
+html.lenis,html.lenis body{ height:auto; }
+.lenis.lenis-smooth{ scroll-behavior:auto !important; }
+.lenis.lenis-stopped{ overflow:hidden; }
+
 @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important; } }
+.w-sw{ display:inline-flex; align-items:center; gap:6px; }
+.w-sw select{ font:inherit; font-size:12px; border-radius:4px; border:0; padding:3px 6px; }
+.w-bar button + button{ margin-left:0; }

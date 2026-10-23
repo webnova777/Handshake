@@ -14,26 +14,40 @@
     { id:"contact",   file:"contact.html",   name:"상담 신청" }
   ];
   var page = document.body.getAttribute("data-page");
+  var href = window.W_HREF || function(f){ return f; };   /* 묶음 미리보기에서 다른 페이지 주소를 바꿔 끼우는 자리 */
   function cur(id){ return id === page ? ' aria-current="page"' : ""; }
 
   /* 와이어 도구 막대 — 실제 사이트에는 없다 */
-  var bar = '<div class="w-bar"><div class="w-bar__in"><strong>저충실도 와이어 v0.1 · 참고용 — 구현 코드로 재사용 금지</strong>' +
-    PAGES.map(function(p){ return '<a href="' + p.file + '"' + cur(p.id) + '>' + p.name + '</a>'; }).join("") +
+  var label = document.body.getAttribute("data-wire") || "저충실도 와이어 v0.1";
+  /* 배치 비교 스위치 — [data-variant="그룹"][data-v="값"] 중 하나만 보인다. 확정되면 HTML 에서 한쪽을 지운다(6번) */
+  var groups = {};
+  [].forEach.call(document.querySelectorAll("[data-variant]"), function(el){
+    var g = el.getAttribute("data-variant");
+    (groups[g] = groups[g] || []).push({ v: el.getAttribute("data-v"), label: el.getAttribute("data-vlabel") || el.getAttribute("data-v") });
+  });
+  var sw = Object.keys(groups).map(function(g){
+    return '<label class="w-sw">' + g + ' <select data-group="' + g + '">' +
+      groups[g].map(function(o){ return '<option value="' + o.v + '">' + o.label + '</option>'; }).join("") + '</select></label>';
+  }).join("");
+  var hasMotion = document.body.hasAttribute("data-motion");   /* motion.js 를 붙인 페이지만 [동작 끄기] */
+  var bar = '<div class="w-bar"><div class="w-bar__in"><strong>' + label + ' · 참고용 — 구현 코드로 재사용 금지</strong>' +
+    PAGES.map(function(p){ return '<a href="' + href(p.file) + '"' + cur(p.id) + '>' + p.name + '</a>'; }).join("") +
+    sw + (hasMotion ? '<button type="button" id="wMotion">동작 끄기</button>' : '') +
     '<button type="button" id="wToggle">기획 메모 끄기</button></div></div>';
 
   /* G-H 헤더 */
-  var gnb = PAGES.slice(1,5).map(function(p){ return '<a href="' + p.file + '"' + cur(p.id) + '>' + p.name + '</a>'; }).join("");
+  var gnb = PAGES.slice(1,5).map(function(p){ return '<a href="' + href(p.file) + '"' + cur(p.id) + '>' + p.name + '</a>'; }).join("");
   var header =
     '<header class="hdsk-header"><div class="hdsk-header__in">' +
-      '<a class="hdsk-header__logo" href="main.html"><div class="hdsk-ph"><span>로고</span></div></a>' +
+      '<a class="hdsk-header__logo" href="' + href("main.html") + '"><div class="hdsk-ph"><span>로고</span></div></a>' +
       '<nav class="hdsk-gnb">' + gnb + '</nav>' +
       '<div class="hdsk-header__util"><a class="hdsk-header__login" href="#">로그인</a>' +
-      '<a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a></div>' +
+      '<a class="hdsk-btn hdsk-btn--primary" href="' + href("contact.html") + '">상담 신청</a></div>' +
       '<button class="hdsk-burger" type="button" id="wBurger" aria-label="메뉴">☰</button>' +
     '</div></header>' +
     '<div class="hdsk-mpanel" id="wPanel">' +
-      PAGES.slice(1,5).map(function(p){ return '<a class="hdsk-mnav" href="' + p.file + '">' + p.name + '</a>'; }).join("") +
-      '<a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a>' +
+      PAGES.slice(1,5).map(function(p){ return '<a class="hdsk-mnav" href="' + href(p.file) + '">' + p.name + '</a>'; }).join("") +
+      '<a class="hdsk-btn hdsk-btn--primary" href="' + href("contact.html") + '">상담 신청</a>' +
       '<a class="hdsk-btn hdsk-btn--secondary" href="#">전화하기</a>' +
       '<p class="hdsk-body"><a href="#">로그인</a></p>' +
     '</div>';
@@ -51,13 +65,26 @@
 
   /* G-08 모바일 하단 고정 바 — 상담 신청 페이지에서는 [전화하기] 만 */
   var mbar = '<nav class="hdsk-mbar"><a href="#">전화하기</a>' +
-    (page === "contact" ? "" : '<a href="contact.html">상담 신청</a>') + '</nav>';
+    (page === "contact" ? "" : '<a href="' + href("contact.html") + '">상담 신청</a>') + '</nav>';
 
   document.body.insertAdjacentHTML("afterbegin", bar + header);
   document.body.insertAdjacentHTML("beforeend", footer + mbar);
 
   document.getElementById("wBurger").addEventListener("click", function(){
     document.getElementById("wPanel").classList.toggle("is-open");
+  });
+  [].forEach.call(document.querySelectorAll(".w-sw select"), function(sel){
+    sel.addEventListener("change", function(){
+      var g = sel.getAttribute("data-group");
+      [].forEach.call(document.querySelectorAll('[data-variant="' + g + '"]'), function(el){ el.hidden = el.getAttribute("data-v") !== sel.value; });
+      document.dispatchEvent(new CustomEvent("w:layout"));
+    });
+  });
+  var mb = document.getElementById("wMotion");
+  if (mb) mb.addEventListener("click", function(){
+    var off = document.documentElement.classList.toggle("w-nomotion");
+    mb.textContent = off ? "동작 켜기" : "동작 끄기";
+    document.dispatchEvent(new CustomEvent("w:motion", { detail: { on: !off } }));
   });
   var t = document.getElementById("wToggle");
   t.addEventListener("click", function(){
