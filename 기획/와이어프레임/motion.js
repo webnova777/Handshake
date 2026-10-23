@@ -10,7 +10,7 @@
   var RM = window.matchMedia("(prefers-reduced-motion: reduce)");
   var HAS_GSAP = !!(window.gsap && window.ScrollTrigger);
   var lastW = window.innerWidth;
-  var io = null, mm = null, lenis = null, tick = null, header = null;
+  var io = null, mm = null, lenis = null, tick = null, header = null, goPhase = null;
 
   if (HAS_GSAP){ gsap.registerPlugin(ScrollTrigger); ScrollTrigger.config({ ignoreMobileResize: true }); }
 
@@ -62,7 +62,7 @@
         e.target.classList.add("is-in"); io.unobserve(e.target);
       });
     }, { threshold: .2 });
-    [].forEach.call(document.querySelectorAll(".hdsk-sec:not(.m-hero), .w-draw"), function(el){
+    [].forEach.call(document.querySelectorAll(".hdsk-sec:not(.m-h), .w-draw"), function(el){
       if (!el.classList.contains("is-in")) io.observe(el);
     });
   }
@@ -113,42 +113,42 @@
     }
     var sec = document.querySelector("[data-i='I-01']");
     if (!sec) return;
-    var scenes = sec.querySelectorAll(".m-scene"), dots = sec.querySelectorAll(".m-dot");
+    /* 단계 : 첫 화면 → 장면 1~4 → 대표 카피. 한 단계당 STEP 화면 분량 스크롤, 마지막 1 화면은 다음 섹션이 덮는 구간 */
+    var STEP = .8;
+    var phases = sec.querySelectorAll(".m-ph"), dots = sec.querySelectorAll(".m-dot");
     var next = sec.nextElementSibling;
-    var N = scenes.length, cur = -1;
+    var P = phases.length, cur = -1;
     sec.classList.add("is-stage");
     if (next && next.getAttribute("data-i") === "I-02") next.classList.add("w-cover");
-    [].forEach.call(scenes, function(s){
-      [].forEach.call(s.querySelectorAll(".m-scene__text > *"), function(el, k){ el.style.setProperty("--k", k); });
-    });
     function show(i){
       if (i === cur) return; cur = i;
-      [].forEach.call(scenes, function(s, j){ s.classList.toggle("is-on", i === j); });
-      [].forEach.call(dots, function(d, j){ if (i === j) d.setAttribute("aria-current", "step"); else d.removeAttribute("aria-current"); });
+      sec.setAttribute("data-ph", i);
+      [].forEach.call(phases, function(ph, j){ ph.classList.toggle("is-on", i === j); });
+      [].forEach.call(dots, function(d, j){ if (i === j + 1) d.setAttribute("aria-current", "step"); else d.removeAttribute("aria-current"); });
     }
     show(0);
     var vh = function(){ return window.innerHeight; };
     var st = ScrollTrigger.create({
       trigger: sec, start: "top top",
-      end: function(){ return "+=" + (vh() * N); },      /* 장면 전환 (N-1) 화면 + 덮기 1 화면 */
+      end: function(){ return "+=" + (vh() * (STEP * (P - 1) + 1)); },
       pin: true, pinSpacing: true, anticipatePin: 1, invalidateOnRefresh: true,
       onUpdate: function(self){
-        var d = self.progress * (self.end - self.start), span = vh() * (N - 1);
-        var p = Math.min(1, d / span);                       /* 장면 구간 진행 0~1 */
-        show(Math.min(N - 1, Math.floor(p * N)));
-        [].forEach.call(dots, function(dot, j){ dot.style.setProperty("--fill", Math.max(0, Math.min(1, p * N - j))); });
+        var d = self.progress * (self.end - self.start), step = vh() * STEP, span = step * (P - 1);
+        var k = Math.min(d, span) / step;                    /* 0 ~ P-1 */
+        show(Math.min(P - 1, Math.floor(k + .5)));
+        [].forEach.call(dots, function(dot, j){ dot.style.setProperty("--fill", Math.max(0, Math.min(1, k - j - .5))); });
         sec.style.setProperty("--cover", Math.max(0, Math.min(1, (d - span) / vh())));
       }
     });
-    [].forEach.call(dots, function(dot, j){
-      dot.onclick = function(){
-        var y = st.start + (vh() * (N - 1)) * (j / N) + 2;
-        if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo(0, y);
-      };
-    });
+    goPhase = function(i){
+      var y = st.start + vh() * STEP * i + 2;
+      if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo(0, y);
+    };
+    [].forEach.call(dots, function(dot, j){ dot.onclick = function(){ goPhase(j + 1); }; });
     return function(){
-      sec.classList.remove("is-stage"); sec.style.removeProperty("--cover");
-      [].forEach.call(scenes, function(s){ s.classList.remove("is-on"); });
+      goPhase = null;
+      sec.classList.remove("is-stage"); sec.style.removeProperty("--cover"); sec.removeAttribute("data-ph");
+      [].forEach.call(phases, function(ph, j){ ph.classList.toggle("is-on", j === 0); });
       if (next) next.classList.remove("w-cover");
       if (lenis){ gsap.ticker.remove(tick); lenis.destroy(); lenis = null; }
     };
@@ -157,11 +157,15 @@
   /* 같은 페이지 안 링크(#) — 부드러운 스크롤이 켜져 있으면 그쪽으로 */
   document.addEventListener("click", function(e){
     var a = e.target.closest && e.target.closest('a[href^="#"]');
-    if (!a || !lenis) return;
+    if (!a || a.getAttribute("href") === "#") return;
     var t = document.querySelector(a.getAttribute("href"));
-    if (t){ e.preventDefault(); lenis.scrollTo(t, { duration: 1.1 }); }
+    if (!t) return;
+    var ph = t.closest(".is-stage .m-ph");                /* 고정 무대 안의 단계로 가는 링크 */
+    if (ph && goPhase){ e.preventDefault(); goPhase([].indexOf.call(ph.parentNode.children, ph)); return; }
+    if (lenis){ e.preventDefault(); lenis.scrollTo(t, { duration: 1.1 }); }
   });
 
+  if (!HAS_GSAP) root.classList.add("w-nostage");
   function start(){
     if (RM.matches || root.classList.contains("w-nomotion")) return stop();
     root.classList.add("w-motion");
