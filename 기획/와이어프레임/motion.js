@@ -47,7 +47,7 @@
       [].forEach.call(g.querySelectorAll("[data-rv]"), function(el, i){ el.style.setProperty("--rvd", (i * .12) + "s"); });
     });
     [].forEach.call(document.querySelectorAll("[data-rv-d]"), function(el){ el.style.setProperty("--rvd", el.getAttribute("data-rv-d") + "s"); });
-    [].forEach.call(document.querySelectorAll(".hdsk-steps[data-i='I-08']"), function(ol){
+    [].forEach.call(document.querySelectorAll("[data-i='I-08']"), function(ol){
       ol.classList.add("w-draw");
       [].forEach.call(ol.children, function(li, i){ li.style.setProperty("--i", i); });
     });
@@ -144,14 +144,40 @@
       var y = st.start + vh() * STEP * i + 2;
       if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo(0, y);
     };
-    [].forEach.call(dots, function(dot, j){ dot.onclick = function(){ goPhase(j + 1); }; });
+    var undoSlide = slides(next);
     return function(){
-      goPhase = null;
+      goPhase = null; if (undoSlide) undoSlide();
       sec.classList.remove("is-stage"); sec.style.removeProperty("--cover"); sec.removeAttribute("data-ph");
       [].forEach.call(phases, function(ph, j){ ph.classList.toggle("is-on", j === 0); });
       if (next) next.classList.remove("w-cover");
       if (lenis){ gsap.ticker.remove(tick); lenis.destroy(); lenis = null; }
     };
+  }
+
+  /* ── I-11 가로 슬라이드 : 화면에 고정된 채 스크롤에 붙어 이미지 띠가 좌→우로 이동, 글은 장마다 바뀜 ── */
+  function slides(sec){
+    if (!sec || !sec.querySelector(".m-v__track")) return null;
+    var track = sec.querySelector(".m-v__track"), items = sec.querySelectorAll(".m-v__item"), bars = sec.querySelectorAll(".m-v__bar i");
+    var N = items.length, cur = -1;
+    track.style.width = (N * 100) + "%";
+    function show(i){
+      if (i === cur) return; cur = i;
+      [].forEach.call(items, function(x, j){ x.classList.toggle("is-on", i === j); });
+      [].forEach.call(bars, function(x, j){ x.classList.toggle("is-on", i === j); });
+    }
+    show(0);
+    var st = ScrollTrigger.create({
+      trigger: sec, start: "top top",
+      end: function(){ return "+=" + (window.innerHeight * (N - 1)); },   /* 한 장당 화면 1개 분량 */
+      pin: true, pinSpacing: true, invalidateOnRefresh: true,
+      onUpdate: function(self){
+        var k = self.progress * (N - 1);                                 /* 0 ~ N-1 */
+        track.style.setProperty("--vx", (-(N - 1 - k) / N * 100) + "%");
+        show(Math.min(N - 1, Math.round(k)));
+      }
+    });
+    return function(){ st.kill(); track.style.removeProperty("width"); track.style.removeProperty("--vx");
+      [].forEach.call(items, function(x, j){ x.classList.toggle("is-on", j === 0); }); };
   }
 
   /* 같은 페이지 안 링크(#) — 부드러운 스크롤이 켜져 있으면 그쪽으로 */

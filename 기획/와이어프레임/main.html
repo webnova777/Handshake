@@ -13,15 +13,15 @@
      기본(모바일 · 움직임 줄이기 · 동작 끄기 · JS 꺼짐) = 세로 나열. 데스크톱 고정 무대는 아래 @media 블록(I-01) */
   .m-h{ padding:0; border-top:0; margin-top:-76px; background:var(--paper); }
   .m-ph{ display:flex; flex-direction:column; padding:40px 0; border-top:1px solid var(--line); }
-  .m-ph__text{ order:-1; width:100%; max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter); }
+  .m-ph__text{ order:-1; width:100%; max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter); text-align:center; }   /* 글은 상자 없이 가운데(2026.10.23 사용자 지정) */
   .m-ph__visual{ width:100%; max-width:var(--maxw); margin:20px auto 0; padding:0 var(--gutter); }
   .m-ph--hero{ padding-top:116px; border-top:0; background:var(--soft2); }
   .m-ph--hero .m-ph__visual .hdsk-ph{ --ratio:4/3; }
-  .m-ph--hero .hdsk-ph{ align-items:flex-end; justify-content:flex-end; padding:16px 16px 96px; }   /* 자리 표시 글자가 문구 상자를 가리지 않게 */
+  .m-ph--hero .hdsk-ph,.m-ph--scene .hdsk-ph,.m-v__slide .hdsk-ph{ align-items:flex-end; justify-content:flex-end; gap:12px; padding:16px 16px 96px; }   /* 자리 표시 글자가 문구를 가리지 않게 */
   .m-ph--final{ padding:72px 0; text-align:center; }
-  .m-h__copy{ max-width:720px; }
+  .m-h__copy{ max-width:760px; margin:0 auto; }
   .m-h .hdsk-h1 .w-line{ display:block; }
-  .m-ph__box{ max-width:453px; }                    /* 5열 폭 */
+  .m-ph__box{ max-width:600px; margin:0 auto; }
   .m-ph__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); margin:0 0 10px; }
   .m-ph .hdsk-card-title{ font-size:32px; }
   .m-h__final{ max-width:none; }
@@ -41,15 +41,12 @@
     html:not(.w-nomotion):not(.w-nostage) .m-ph__text{ position:relative; z-index:2; max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter);
       opacity:0; transform:translateY(16px); transition:opacity .8s var(--ease),transform .8s var(--ease); }
     html:not(.w-nomotion):not(.w-nostage) .m-ph.is-on .m-ph__text{ opacity:1; transform:none; transition-delay:.12s; }
-    html:not(.w-nomotion):not(.w-nostage) .m-ph--scene{ justify-content:flex-end; padding-bottom:148px; }
     html:not(.w-nomotion):not(.w-nostage) .m-ph--final .m-ph__text{ transform:translateY(16px) scale(.98); }
     html:not(.w-nomotion):not(.w-nostage) .m-ph--final.is-on .m-ph__text{ transform:none; }
-    html:not(.w-nomotion):not(.w-nostage) .m-h__copy,
-    html:not(.w-nomotion):not(.w-nostage) .m-ph__box{ background:rgba(255,255,255,.88); padding:32px; border-radius:10px; }   /* 와이어용 가독 상자 — 실제는 8번 대비 실측 */
-    html:not(.w-nomotion):not(.w-nostage) .m-h__bar{ position:absolute; left:0; right:0; bottom:40px; z-index:3; display:flex; gap:8px; transition:opacity .8s var(--ease); }
+    html:not(.w-nomotion):not(.w-nostage) .m-h__bar{ position:absolute; left:50%; bottom:40px; z-index:3; width:min(480px, calc(100% - 80px)); transform:translateX(-50%); display:flex; gap:8px; transition:opacity .8s var(--ease); pointer-events:none; }
     html:not(.w-nomotion):not(.w-nostage) .m-h[data-ph="5"] .m-h__bar{ opacity:0; pointer-events:none; }
   }
-  .m-dot{ flex:1; font:inherit; font-size:13px; font-weight:700; color:var(--sub); text-align:left; background:none; border:0; padding:10px 0 0; min-height:44px; cursor:pointer; position:relative; }
+  .m-dot{ flex:1; font-size:13px; font-weight:700; color:var(--sub); text-align:center; padding:10px 0 0; position:relative; }   /* 단계 표시만 — 누르는 버튼 아님 */
   .m-dot::before,.m-dot::after{ content:""; position:absolute; left:0; right:0; top:0; height:3px; background:rgba(0,0,0,.15); }
   .m-dot::after{ background:var(--ink); transform-origin:left; transform:scaleX(var(--fill,0)); }
   .m-dot[aria-current="step"]{ color:var(--ink); }
@@ -62,6 +59,43 @@
     .m-ph .hdsk-card-title{ font-size:var(--fs-card-title); }
     .w-big{ font-size:64px; }
   }
+
+  /* M-02 핵심가치 3가지 — 전체 화면 이미지 3장(2026.10.23 사용자 지정)
+     기본(모바일 · 움직임 줄이기 · JS 꺼짐) = 제목 → [글 → 이미지] × 3 → 버튼 세로 나열. 순서는 order 로 맞춘다(마크업 한 벌)
+     데스크톱 = 화면 고정 · 이미지 띠가 스크롤에 맞춰 좌→우로 이동 · 글은 왼쪽에서 같이 바뀜(I-11) */
+  .m-v{ display:flex; flex-direction:column; background:var(--soft); }
+  .m-v__track,.m-v__ov,.m-v__texts{ display:contents; }
+  .m-v__head{ order:0; }
+  .m-v__item{ order:var(--o); margin-top:28px; }
+  .m-v__slide{ order:var(--o); margin-top:16px; }
+  .m-v__foot{ order:20; margin-top:32px; }
+  .m-v__head,.m-v__item,.m-v__slide,.m-v__foot{ width:100%; max-width:var(--maxw); margin-left:auto; margin-right:auto; padding:0 var(--gutter); }
+  .m-v__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); margin:0 0 8px; }
+  .m-v__title{ font-size:var(--fs-h2); font-weight:var(--fw-head); line-height:var(--lh-head-ko); letter-spacing:var(--ls-head); margin:0; }
+  .m-v__bar{ display:none; }
+  @media (min-width:769px) and (prefers-reduced-motion:no-preference) and (scripting:enabled){
+    html:not(.w-nomotion):not(.w-nostage) .m-v{ display:block; position:relative; height:100vh; min-height:640px; padding:0; overflow:hidden; border-top:0; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__track{ display:flex; flex-direction:row-reverse; position:absolute; top:0; left:0; height:100%; width:300%;
+      transform:translateX(var(--vx,-66.6667%)); will-change:transform; }   /* 마크업 순서 1·2·3 을 오른쪽부터 깔고, 왼쪽으로 당겨 둔 띠를 오른쪽으로 민다 = 좌→우 */
+    html:not(.w-nomotion):not(.w-nostage) .m-v__slide{ flex:1 1 0; height:100%; max-width:none; margin:0; padding:0; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__slide .hdsk-ph{ height:100%; aspect-ratio:auto; border:0; border-radius:0; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__ov{ display:flex; flex-direction:column; justify-content:center; position:absolute; inset:0; z-index:2;
+      max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter); pointer-events:none; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__head,
+    html:not(.w-nomotion):not(.w-nostage) .m-v__foot{ padding:0; margin:0; max-width:560px; pointer-events:auto; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__texts{ display:grid; max-width:560px; margin:40px 0; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__item{ grid-area:1 / 1; margin:0; padding:0; opacity:0; transform:translateX(-16px);
+      transition:opacity .8s var(--ease),transform .8s var(--ease); }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__item.is-on{ opacity:1; transform:none; transition-delay:.12s; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__bar{ display:flex; gap:6px; width:120px; margin-top:28px; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__bar i{ flex:1; height:3px; background:rgba(0,0,0,.15); }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__bar i.is-on{ background:var(--ink); }
+  }
+  @media (max-width:768px){ .m-v__title{ font-size:var(--fs-h2); } .m-v__foot .hdsk-btn{ width:100%; } }
+
+  .w-notes{ padding:24px 0; }
+  .w-notes .w-note:first-child{ margin-top:0; }
+  body.notes-off .w-notes{ display:none; }
 
   /* M-03 B2 — 목록 + 바뀌는 사진(I-06) */
   .m-svc2{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; align-items:start; }
@@ -83,6 +117,40 @@
     .m-svc2__mimg{ display:flex; grid-column:1 / -1; margin-top:14px; --ratio:16/9; }
   }
 
+  /* M-04 포트폴리오 — 호버 오버레이 + 악수 로고(I-12) */
+  .m-pf__item{ text-decoration:none; color:inherit; display:block; }
+  .m-pf__ov{ position:absolute; inset:0; z-index:2; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .24s var(--ease); }
+  .m-pf__logo{ width:96px; height:96px; border-radius:50%; border:1.5px solid #fff; color:#fff; font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; transform:scale(.92); transition:transform .24s var(--ease); }
+  @media (hover:hover){
+    .m-pf__item:hover .m-pf__ov,.m-pf__item:focus-visible .m-pf__ov{ opacity:1; }
+    .m-pf__item:hover .m-pf__logo,.m-pf__item:focus-visible .m-pf__logo{ transform:none; }
+  }
+
+  /* M-05 진행절차 — 원 안에 단계 이름, 원끼리 선으로 잇는다(2026.10.23 사용자 지정, I-08) */
+  .m-proc{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(5,1fr); gap:24px; }
+  .m-proc__step{ position:relative; text-align:center; }
+  .m-proc__dot{ position:relative; z-index:1; width:140px; height:140px; margin:0 auto; border:1.5px solid var(--ink); border-radius:50%; background:var(--paper);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+  .m-proc__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); }
+  .m-proc__name{ font-size:var(--fs-card-title); font-weight:700; line-height:1.35; letter-spacing:-.01em; margin:0; }
+  .m-proc__step .hdsk-body{ margin-top:16px; }
+  .m-proc__step + .m-proc__step::before{ content:""; position:absolute; top:70px; height:1.5px; background:var(--ink);
+    left:calc(-50% - 24px + 70px); right:calc(50% + 70px); }      /* 앞 원의 오른쪽 끝 → 이 원의 왼쪽 끝 */
+  html.w-motion .w-draw .m-proc__dot,html.w-motion .w-draw .m-proc__step .hdsk-body{ opacity:0; transform:scale(.94); transition:opacity .8s var(--ease),transform .8s var(--ease); transition-delay:calc(var(--i) * .24s); }
+  html.w-motion .w-draw .m-proc__step + .m-proc__step::before{ opacity:0; transition:opacity .8s var(--ease); transition-delay:calc(var(--i) * .24s - .12s); }
+  html.w-motion .w-draw.is-in .m-proc__dot,html.w-motion .w-draw.is-in .m-proc__step .hdsk-body,
+  html.w-motion .w-draw.is-in .m-proc__step + .m-proc__step::before{ opacity:1; transform:none; }
+  @media (max-width:768px){
+    .m-proc{ grid-template-columns:1fr; gap:0; }
+    .m-proc__step{ display:grid; grid-template-columns:88px 1fr; column-gap:16px; align-items:center; text-align:left; padding-bottom:20px; }
+    .m-proc__dot{ width:88px; height:88px; margin:0; }
+    .m-proc__name{ font-size:16px; }
+    .m-proc__step .hdsk-body{ margin:0; }
+    .m-proc__step + .m-proc__step::before{ top:-20px; height:20px; width:1.5px; left:43px; right:auto; }   /* 앞 원 아래 → 이 원 위 */
+  }
+
   /* M-06 상담 CTA — 흐르는 띠(I-07) */
   .m-cta{ overflow:hidden; }
   .m-cta .w-marquee{ margin:0 0 56px; }
@@ -101,10 +169,6 @@
         <p class="hdsk-eyebrow w-hero-in" style="--d:.1s" data-st="가안">병원 통신·보안·가전 솔루션</p>
         <h1 class="hdsk-h1" data-st="가안"><span class="w-line"><span class="w-line__in w-hero-in" style="--d:.22s">편리하게 납품하고</span></span><span class="w-line"><span class="w-line__in w-hero-in" style="--d:.34s">신속하게 지킵니다</span></span></h1>
         <p class="hdsk-lead w-hero-in" style="--d:.46s" data-st="가안">병원 진료를 지키기 위해, 계약부터 설치, 개원 후 A/S까지 핸드쉐이크가 책임집니다.</p>
-        <div class="hdsk-btnrow w-hero-in" style="--d:.68s">
-          <a class="hdsk-btn hdsk-btn--primary" href="contact.html">상담 신청</a>
-          <a class="hdsk-btn hdsk-btn--secondary" href="#M-01-p1">일하는 과정 보기 ↓</a>
-        </div>
       </div></div>
     </article>
     <article class="m-ph m-ph--scene" id="M-01-p1">
@@ -134,27 +198,39 @@
       </div>
     </article>
   </div>
-  <div class="hdsk-wrap m-h__bar" aria-label="장면 이동">
-    <button class="m-dot" type="button">계약</button><button class="m-dot" type="button">사전작업</button><button class="m-dot" type="button">납품</button><button class="m-dot" type="button">사후관리</button>
+  <div class="m-h__bar" aria-hidden="true">
+    <span class="m-dot">계약</span><span class="m-dot">사전작업</span><span class="m-dot">납품</span><span class="m-dot">사후관리</span>
   </div>
 </section>
-<!-- M-02 핵심가치 3가지 — I-02 : M-01 고정 무대를 덮으며 올라온다 -->
-<section class="hdsk-sec hdsk-sec--soft" id="M-02" data-i="I-02">
-  <span class="w-id">M-02 핵심가치 3가지 · I-02 덮기</span>
-  <div class="hdsk-wrap">
-    <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">맡기시면 달라지는 세 가지</h2></div>
-    <div class="hdsk-grid hdsk-grid--3" data-rv-group>
-      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title">시간 절약</h3></div>
-        <p class="hdsk-body" data-st="가안">턴키 — 업체 8곳을 따로 부를 필요 없이, 한 곳에서 끝냅니다.</p></div>
-      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title">비용 절감</h3></div>
-        <p class="hdsk-body" data-st="대기">최신 조건 확인 후 기재 (예 : 보안 가입 시 네트워크 무상 방문 A/S — 기간 평생 / 3년 확인 중)</p></div>
-      <div class="hdsk-card" data-rv><div class="hdsk-card__head"><span class="hdsk-icon"></span><h3 class="hdsk-card-title">정확한 가이드</h3></div>
-        <p class="hdsk-body">진료과와 병원 규모에 맞춘 품목을 제안합니다.</p></div>
+<!-- M-02 핵심가치 3가지 — I-02 로 M-01 을 덮으며 올라온 뒤, 화면에 고정된 채 스크롤하면 이미지가 좌→우로 넘어간다(I-11) -->
+<section class="hdsk-sec m-v" id="M-02" data-i="I-02">
+  <span class="w-id">M-02 핵심가치 3가지 · I-02 덮기 · I-11 가로 슬라이드</span>
+  <div class="m-v__track">
+    <div class="m-v__slide" style="--o:2"><div class="hdsk-ph"><b class="w-big">01</b><span>핵심가치 1 전체 화면 이미지 — 시간 절약 [대기]</span></div></div>
+    <div class="m-v__slide" style="--o:4"><div class="hdsk-ph"><b class="w-big">02</b><span>핵심가치 2 전체 화면 이미지 — 비용 절감 [대기]</span></div></div>
+    <div class="m-v__slide" style="--o:6"><div class="hdsk-ph"><b class="w-big">03</b><span>핵심가치 3 전체 화면 이미지 — 정확한 가이드 [대기]</span></div></div>
+  </div>
+  <div class="m-v__ov">
+    <h2 class="hdsk-h2 m-v__head" data-split data-st="가안">맡기시면 달라지는 세 가지</h2>
+    <div class="m-v__texts">
+      <div class="m-v__item is-on" style="--o:1"><p class="m-v__no">01 / 03</p><h3 class="m-v__title">시간 절약</h3><p class="hdsk-body" data-st="가안">턴키 — 업체 8곳을 따로 부를 필요 없이, 한 곳에서 끝냅니다.</p></div>
+      <div class="m-v__item" style="--o:3"><p class="m-v__no">02 / 03</p><h3 class="m-v__title">비용 절감</h3><p class="hdsk-body" data-st="대기">최신 조건 확인 후 기재 (예 : 보안 가입 시 네트워크 무상 방문 A/S — 기간 평생 / 3년 확인 중)</p></div>
+      <div class="m-v__item" style="--o:5"><p class="m-v__no">03 / 03</p><h3 class="m-v__title">정확한 가이드</h3><p class="hdsk-body" data-st="가안">진료과와 병원 규모에 맞춘 품목을 제안합니다.</p></div>
     </div>
-    <p class="w-note"><b>M-01</b> — 한 섹션이다(2026.10.23 사용자 지정). <b>데스크톱</b> : 화면 가득 모션그래픽 위에 제목·버튼(로드 즉시 재생, 1-1) → 스크롤하면 제목이 빠지고 같은 화면에서 장면 1~4 → 대표 카피 → M-02 가 덮으며 올라온다. 한 단계당 화면 0.8개 분량 스크롤(와이어 임시값). 아래 막대는 단계 표시이자 이동 버튼. <b>모바일·움직임 줄이기</b> : 고정하지 않고 첫 화면 → 장면 1~4 → 대표 카피를 세로로 나열(2번). 대표 카피 문구는 ⑦ 에서 확정.</p>
-    <p class="w-note">카드 제목 3개는 사용자 지정(시간 절약(턴키) / 비용 절감 / 정확한 가이드). "비용 절감" 설명은 최신 조건 확인 후 기재. 데스크톱 : M-01 대표 카피가 멈춘 채로 이 섹션이 아래에서 덮고 올라온다. 덮이는 동안 앞 무대는 살짝 작아지고 어두워진다. 모바일은 일반 스크롤. 제목은 줄마다 밑에서 올라오고(I-03), 카드는 0.12초 간격으로 겹쳐 등장.</p>
+    <div class="m-v__foot">
+      <a class="hdsk-btn hdsk-btn--secondary" href="about.html" data-st="가안">회사 소개 보기 →</a>
+      <div class="m-v__bar" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
   </div>
 </section>
+
+<!-- 와이어 메모 — 고정 섹션 안에 두면 가려져서 밖에 둔다 -->
+<div class="hdsk-sec w-notes">
+  <div class="hdsk-wrap">
+    <p class="w-note"><b>M-01</b> — 한 섹션(2026.10.23). 글은 <b>상자 없이 가운데 정렬, 버튼 없음</b>(2026.10.23 사용자 지정). <b>데스크톱</b> : 화면 가득 모션그래픽 위에 제목(로드 즉시 재생, 1-1) → 스크롤하면 제목이 빠지고 같은 화면에서 장면 1~4 → 대표 카피 → M-02 가 덮으며 올라온다. 한 단계당 화면 0.8개 분량 스크롤(와이어 임시값). 아래 막대는 지금 단계를 보여 주기만 한다. 글이 모션그래픽 위에 바로 놓이므로 대비는 디자인에서 어둡게 깔아 맞춘다(8번). <b>모바일·움직임 줄이기</b> : 고정하지 않고 세로 나열(2번).</p>
+    <p class="w-note"><b>M-02</b> — 카드 대신 <b>전체 화면 이미지 3장</b>(2026.10.23 사용자 지정). 데스크톱 : M-01 을 덮고 올라온 뒤 화면에 고정, 스크롤하면 이미지가 <b>왼쪽에서 오른쪽으로</b> 넘어가고(스크롤에 붙어 움직임) 왼쪽 글(번호·제목·설명)이 같이 바뀐다. 제목 "맡기시면 달라지는 세 가지"와 [회사 소개 보기 →] 는 그대로 남는다. 한 장당 화면 1개 분량 스크롤(와이어 임시값). 모바일 : 고정 없이 제목 → [글 → 이미지 16:9] × 3 → 버튼. 비용 절감 설명은 최신 조건 확인 후 기재.</p>
+  </div>
+</div>
 
 <!-- M-03 서비스 요약 — 배치 B1 / B2 비교용 스위치(도구 막대). 확정되면 한쪽을 지운다 -->
 <section class="hdsk-sec" id="M-03">
@@ -203,6 +279,8 @@
       <p class="w-note">B2 : 서비스 페이지 5개 섹션(S-01~S-05)과 1:1. 데스크톱은 목록(1~5열)에 마우스·키보드 포커스가 가면 오른쪽 사진(6~12열, 4:3)이 1.1초에 걸쳐 겹쳐 바뀐다. 모바일은 항목마다 사진(16:9)이 글 아래 붙는다 — 마우스가 없어도 정보가 다 보인다.</p>
     </div>
     <p class="hdsk-body" style="margin-top:24px" data-st="가안">진료과·병원 규모에 맞춰 필요한 품목만 골라 구성하실 수 있습니다.</p>
+    <div class="hdsk-btnrow" data-rv data-rv-d=".22"><a class="hdsk-btn hdsk-btn--secondary" href="service.html" data-st="가안">서비스 자세히 보기 →</a></div>
+    <p class="w-note">서비스 페이지 이동 버튼(2026.10.23 사용자 지정) — 섹션 맨 아래, 왼쪽 정렬. 모바일은 전체 폭.</p>
   </div>
 </section>
 
@@ -211,32 +289,32 @@
   <span class="w-id">M-04 대표 포트폴리오</span>
   <div class="hdsk-wrap">
     <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">진료과별 납품 사례</h2></div>
-    <div class="hdsk-grid hdsk-grid--3">
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
-      <div><div class="hdsk-ph" style="--ratio:4/3"><span>사례 사진</span></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></div>
+    <div class="hdsk-grid hdsk-grid--3 m-pf" data-i="I-12">
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
+      <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
     </div>
     <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--secondary" href="portfolio.html" data-st="가안">포트폴리오 전체 보기</a></div>
-    <p class="w-note">이 섹션은 <b>아임웹 갤러리 위젯</b>(코드 위젯 아님) — 우리 CSS 가 안 걸려(1-4) 사진은 움직이지 않는다. 제목만 줄 단위 등장. 6건 3×2 / 모바일 2×3 [확인 대기].</p>
+    <p class="w-note">사진에 마우스를 올리면 어두운 오버레이가 깔리며 가운데 <b>악수 로고</b>가 나타난다(0.24초, 2026.10.23 사용자 지정). 터치 화면은 호버가 없어 오버레이 없이 바로 이동. ⚠ 아임웹 갤러리 위젯에는 우리 CSS 가 안 닿는다(1-4) — 이 효과를 넣으려면 사이트 전역 CSS 로 그 위젯을 잡거나 코드 위젯으로 바꿔야 한다 [구현 방식 결정 필요]. 6건 3×2 / 모바일 2×3.</p>
   </div>
 </section>
 
-<!-- M-05 상담 절차 — I-08 선 그어지기 -->
+<!-- M-05 진행절차 — 원 + 잇는 선(I-08) -->
 <section class="hdsk-sec" id="M-05">
   <span class="w-id">M-05 진행절차(상담 신청 후) · I-08</span>
   <div class="hdsk-wrap">
     <div class="hdsk-sec__head"><h2 class="hdsk-h2" data-split data-st="가안">상담 신청 후, 이렇게 진행됩니다</h2></div>
-    <ol class="hdsk-steps" data-i="I-08">
-      <li class="hdsk-step"><span class="hdsk-step__no">01</span><h3 class="hdsk-card-title">상담</h3><p class="hdsk-body">전화로 먼저 상황을 여쭙니다</p></li>
-      <li class="hdsk-step"><span class="hdsk-step__no">02</span><h3 class="hdsk-card-title">상담양식</h3><p class="hdsk-body">필요한 내용을 양식으로 받습니다</p></li>
-      <li class="hdsk-step"><span class="hdsk-step__no">03</span><h3 class="hdsk-card-title">초안</h3><p class="hdsk-body">품목 구성 초안을 드립니다</p></li>
-      <li class="hdsk-step"><span class="hdsk-step__no">04</span><h3 class="hdsk-card-title">미팅</h3><p class="hdsk-body">초안을 놓고 함께 봅니다</p></li>
-      <li class="hdsk-step"><span class="hdsk-step__no">05</span><h3 class="hdsk-card-title">최종조율</h3><p class="hdsk-body">품목과 일정을 확정합니다</p></li>
+    <ol class="m-proc" data-i="I-08">
+      <li class="m-proc__step"><div class="m-proc__dot"><span class="m-proc__no">01</span><h3 class="m-proc__name">상담</h3></div><p class="hdsk-body">전화로 먼저 상황을 여쭙니다</p></li>
+      <li class="m-proc__step"><div class="m-proc__dot"><span class="m-proc__no">02</span><h3 class="m-proc__name">상담양식</h3></div><p class="hdsk-body">필요한 내용을 양식으로 받습니다</p></li>
+      <li class="m-proc__step"><div class="m-proc__dot"><span class="m-proc__no">03</span><h3 class="m-proc__name">초안</h3></div><p class="hdsk-body">품목 구성 초안을 드립니다</p></li>
+      <li class="m-proc__step"><div class="m-proc__dot"><span class="m-proc__no">04</span><h3 class="m-proc__name">미팅</h3></div><p class="hdsk-body">초안을 놓고 함께 봅니다</p></li>
+      <li class="m-proc__step"><div class="m-proc__dot"><span class="m-proc__no">05</span><h3 class="m-proc__name">최종조율</h3></div><p class="hdsk-body">품목과 일정을 확정합니다</p></li>
     </ol>
-    <p class="w-note">선이 왼쪽→오른쪽(모바일 위→아래)으로 1.2초에 그어지고, 선이 지나가는 순서대로 단계가 나타난다. 단계 이름·설명 [가안 — 대표님 재확인 예정]. 이 절차가 끝나면 M-01 의 "계약"으로 이어진다.</p>
+    <p class="w-note">원 안에 번호·단계 이름, 원 아래 설명 한 줄. 원끼리는 가는 선으로 잇는다(데스크톱 가로 / 모바일 세로, 설명은 원 오른쪽). 화면에 들어오면 원이 왼쪽부터 0.24초 간격으로 나타나고 선이 뒤따른다. 단계 이름·설명 [가안 — 대표님 재확인 예정]. 이 절차가 끝나면 M-01 의 "계약"으로 이어진다.</p>
   </div>
 </section>
 
