@@ -28,9 +28,10 @@
   .m-h__bar{ display:none; }
   .w-big{ position:relative; z-index:1; display:block; font-size:120px; font-weight:800; line-height:1; color:#d2d2d2; letter-spacing:-.04em; }
 
-  /* 데스크톱 고정 무대 — JS 가 돌기 전에도 이 배치로 그린다(1-1). 단계 넘기기·고정은 motion.js */
-  @media (min-width:769px) and (prefers-reduced-motion:no-preference) and (scripting:enabled){
-    html:not(.w-nomotion):not(.w-nostage) .m-h{ position:relative; height:100vh; min-height:640px; overflow:hidden; z-index:1; }
+  /* 고정 무대 — 데스크톱·모바일 모두(모바일은 2026.10.23 사용자 지정). JS 가 돌기 전에도 이 배치로 그린다(1-1). 단계 넘기기·고정은 motion.js
+     높이 = --stage-h : 처음 한 번 잰 화면 높이를 얼려 둔 값(폭이 바뀔 때만 다시 잼 — 모바일 주소창, 2번). JS 전에는 100svh */
+  @media (prefers-reduced-motion:no-preference) and (scripting:enabled){
+    html:not(.w-nomotion):not(.w-nostage) .m-h{ position:relative; height:var(--stage-h,100svh); min-height:640px; overflow:hidden; z-index:1; }
     html:not(.w-nomotion):not(.w-nostage) .m-h__phases{ position:absolute; inset:0; }
     html:not(.w-nomotion):not(.w-nostage) .m-ph{ position:absolute; inset:0; padding:0; border:0; background:none; justify-content:center; pointer-events:none; }
     html:not(.w-nomotion):not(.w-nostage) .m-ph.is-on{ pointer-events:auto; }
@@ -73,8 +74,8 @@
   .m-v__no{ font-size:var(--fs-card-label); font-weight:700; color:var(--muted); margin:0 0 8px; }
   .m-v__title{ font-size:var(--fs-h2); font-weight:var(--fw-head); line-height:var(--lh-head-ko); letter-spacing:var(--ls-head); margin:0; }
   .m-v__bar{ display:none; }
-  @media (min-width:769px) and (prefers-reduced-motion:no-preference) and (scripting:enabled){
-    html:not(.w-nomotion):not(.w-nostage) .m-v{ display:block; position:relative; height:100vh; min-height:640px; padding:0; overflow:hidden; border-top:0; }
+  @media (prefers-reduced-motion:no-preference) and (scripting:enabled){
+    html:not(.w-nomotion):not(.w-nostage) .m-v{ display:block; position:relative; height:var(--stage-h,100svh); min-height:640px; padding:0; overflow:hidden; border-top:0; }
     html:not(.w-nomotion):not(.w-nostage) .m-v__track{ display:flex; flex-direction:row-reverse; position:absolute; top:0; left:0; height:100%; width:300%;
       transform:translateX(var(--vx,-66.6667%)); will-change:transform; }   /* 마크업 순서 1·2·3 을 오른쪽부터 깔고, 왼쪽으로 당겨 둔 띠를 오른쪽으로 민다 = 좌→우 */
     html:not(.w-nomotion):not(.w-nostage) .m-v__slide{ flex:1 1 0; height:100%; max-width:none; margin:0; padding:0; }
@@ -92,6 +93,21 @@
     html:not(.w-nomotion):not(.w-nostage) .m-v__bar i.is-on{ background:var(--ink); }
   }
   @media (max-width:768px){ .m-v__title{ font-size:var(--fs-h2); } .m-v__foot .hdsk-btn{ width:100%; } }
+
+  /* 모바일 고정 무대 — 헤더(60) · 하단 고정 바(60, G-08)를 피해 글과 단계 표시를 둔다 */
+  @media (max-width:768px) and (prefers-reduced-motion:no-preference) and (scripting:enabled){
+    html:not(.w-nomotion):not(.w-nostage) .m-h,
+    html:not(.w-nomotion):not(.w-nostage) .m-v{ min-height:520px; }
+    html:not(.w-nomotion):not(.w-nostage) .m-ph .hdsk-card-title{ font-size:var(--fs-h2); }
+    html:not(.w-nomotion):not(.w-nostage) .m-ph .hdsk-ph{ padding-bottom:calc(var(--bar-h) + 72px); }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__slide .hdsk-ph{ align-items:flex-start; padding:96px 16px 0; }   /* 글이 아래쪽이라 자리 표시는 위로 */
+    html:not(.w-nomotion):not(.w-nostage) .m-h__bar{ bottom:calc(var(--bar-h) + 20px); width:calc(100% - 40px); }
+    html:not(.w-nomotion):not(.w-nostage) .m-dot{ font-size:11px; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__ov{ justify-content:flex-end; padding-bottom:calc(var(--bar-h) + 28px); }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__texts{ margin:24px 0; min-height:9.5em; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__foot .hdsk-btn{ width:auto; }
+    html:not(.w-nomotion):not(.w-nostage) .m-v__bar{ margin-top:20px; }
+  }
 
   .w-notes{ padding:24px 0; }
   .w-notes .w-note:first-child{ margin-top:0; }
@@ -119,6 +135,11 @@
 
   /* M-04 포트폴리오 — 호버 오버레이 + 악수 로고(I-12) */
   .m-pf__item{ text-decoration:none; color:inherit; display:block; }
+  @media (max-width:768px){   /* 모바일은 3개만 : 큰 1 + 작은 2(2026.10.23 사용자 지정) */
+    .m-pf{ grid-template-columns:1fr 1fr; gap:12px; }
+    .m-pf__item:first-child{ grid-column:1 / -1; }
+    .m-pf__item:nth-child(n+4){ display:none; }
+  }
   .m-pf__ov{ position:absolute; inset:0; z-index:2; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center;
     opacity:0; transition:opacity .24s var(--ease); }
   .m-pf__logo{ width:96px; height:96px; border-radius:50%; border:1.5px solid #fff; color:#fff; font-size:13px; font-weight:700;
@@ -227,8 +248,8 @@
 <!-- 와이어 메모 — 고정 섹션 안에 두면 가려져서 밖에 둔다 -->
 <div class="hdsk-sec w-notes">
   <div class="hdsk-wrap">
-    <p class="w-note"><b>M-01</b> — 한 섹션(2026.10.23). 글은 <b>상자 없이 가운데 정렬, 버튼 없음</b>(2026.10.23 사용자 지정). <b>데스크톱</b> : 화면 가득 모션그래픽 위에 제목(로드 즉시 재생, 1-1) → 스크롤하면 제목이 빠지고 같은 화면에서 장면 1~4 → 대표 카피 → M-02 가 덮으며 올라온다. 한 단계당 화면 0.8개 분량 스크롤(와이어 임시값). 아래 막대는 지금 단계를 보여 주기만 한다. 글이 모션그래픽 위에 바로 놓이므로 대비는 디자인에서 어둡게 깔아 맞춘다(8번). <b>모바일·움직임 줄이기</b> : 고정하지 않고 세로 나열(2번).</p>
-    <p class="w-note"><b>M-02</b> — 카드 대신 <b>전체 화면 이미지 3장</b>(2026.10.23 사용자 지정). 데스크톱 : M-01 을 덮고 올라온 뒤 화면에 고정, 스크롤하면 이미지가 <b>왼쪽에서 오른쪽으로</b> 넘어가고(스크롤에 붙어 움직임) 왼쪽 글(번호·제목·설명)이 같이 바뀐다. 제목 "맡기시면 달라지는 세 가지"와 [회사 소개 보기 →] 는 그대로 남는다. 한 장당 화면 1개 분량 스크롤(와이어 임시값). 모바일 : 고정 없이 제목 → [글 → 이미지 16:9] × 3 → 버튼. 비용 절감 설명은 최신 조건 확인 후 기재.</p>
+    <p class="w-note"><b>M-01</b> — 한 섹션(2026.10.23). 글은 <b>상자 없이 가운데 정렬, 버튼 없음</b>(2026.10.23 사용자 지정). <b>데스크톱</b> : 화면 가득 모션그래픽 위에 제목(로드 즉시 재생, 1-1) → 스크롤하면 제목이 빠지고 같은 화면에서 장면 1~4 → 대표 카피 → M-02 가 덮으며 올라온다. 한 단계당 화면 0.8개 분량 스크롤(와이어 임시값). 아래 막대는 지금 단계를 보여 주기만 한다. 글이 모션그래픽 위에 바로 놓이므로 대비는 디자인에서 어둡게 깔아 맞춘다(8번). <b>모바일도 같은 방식</b>(2026.10.23 사용자 지정) — 화면에 고정된 채 위아래 스크롤로 단계가 바뀐다. 높이는 처음 잰 화면 높이로 얼린다(2번). <b>움직임 줄이기</b>만 고정 없이 세로 나열.</p>
+    <p class="w-note"><b>M-02</b> — 카드 대신 <b>전체 화면 이미지 3장</b>(2026.10.23 사용자 지정). 데스크톱 : M-01 을 덮고 올라온 뒤 화면에 고정, 스크롤하면 이미지가 <b>왼쪽에서 오른쪽으로</b> 넘어가고(스크롤에 붙어 움직임) 왼쪽 글(번호·제목·설명)이 같이 바뀐다. 제목 "맡기시면 달라지는 세 가지"와 [회사 소개 보기 →] 는 그대로 남는다. 한 장당 화면 1개 분량 스크롤(와이어 임시값). <b>모바일도 같은 방식</b> — 세로 사진이 화면을 채우고 위아래 스크롤에 맞춰 좌→우로 넘어간다. 글은 화면 아래쪽(하단 고정 바 위)에 왼쪽 정렬. 움직임 줄이기만 세로 나열. 비용 절감 설명은 최신 조건 확인 후 기재.</p>
   </div>
 </div>
 
@@ -298,7 +319,7 @@
       <a class="m-pf__item" href="portfolio.html"><div class="hdsk-ph m-pf__img" style="--ratio:4/3"><span>사례 사진</span><div class="m-pf__ov" aria-hidden="true"><div class="m-pf__logo">악수 로고</div></div></div><p class="hdsk-body"><b>○○의원</b> · 진료과 · 지역</p></a>
     </div>
     <div class="hdsk-btnrow"><a class="hdsk-btn hdsk-btn--secondary" href="portfolio.html" data-st="가안">포트폴리오 전체 보기</a></div>
-    <p class="w-note">사진에 마우스를 올리면 어두운 오버레이가 깔리며 가운데 <b>악수 로고</b>가 나타난다(0.24초, 2026.10.23 사용자 지정). 터치 화면은 호버가 없어 오버레이 없이 바로 이동. ⚠ 아임웹 갤러리 위젯에는 우리 CSS 가 안 닿는다(1-4) — 이 효과를 넣으려면 사이트 전역 CSS 로 그 위젯을 잡거나 코드 위젯으로 바꿔야 한다 [구현 방식 결정 필요]. 6건 3×2 / 모바일 2×3.</p>
+    <p class="w-note">사진에 마우스를 올리면 어두운 오버레이가 깔리며 가운데 <b>악수 로고</b>가 나타난다(0.24초, 2026.10.23 사용자 지정). 터치 화면은 호버가 없어 오버레이 없이 바로 이동. ⚠ 아임웹 갤러리 위젯에는 우리 CSS 가 안 닿는다(1-4) — 이 효과를 넣으려면 사이트 전역 CSS 로 그 위젯을 잡거나 코드 위젯으로 바꿔야 한다 [구현 방식 결정 필요]. 데스크톱 6건 3×2 / <b>모바일 3건 — 위에 큰 1개(전체 폭), 아래 작은 2개(2열)</b>. 갤러리 위젯이 기기별 개수를 못 정하면 전역 CSS 로 4~6번째를 숨긴다.</p>
   </div>
 </section>
 

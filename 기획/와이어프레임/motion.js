@@ -102,15 +102,24 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* ── I-01 고정 무대 + I-02 덮기 + I-10 부드러운 스크롤 : 데스크톱 · 움직임 줄이기 아님 ── */
-  function desktop(){
-    /* I-10 Lenis — 데스크톱만(터치는 기본 스크롤) */
-    if (window.Lenis){
-      lenis = new Lenis({ lerp: .1, smoothWheel: true });
-      lenis.on("scroll", ScrollTrigger.update);
-      tick = function(t){ lenis.raf(t * 1000); };
-      gsap.ticker.add(tick); gsap.ticker.lagSmoothing(0);
-    }
+  /* ── 무대 높이 : 처음 한 번 재서 얼린다. 폭이 바뀔 때만 다시 잰다(세로만 바뀐 건 모바일 주소창, 2번) ── */
+  var stageH = 0;
+  function vh(){ return Math.max(stageH, window.innerWidth > 768 ? 640 : 520); }   /* CSS min-height 와 같게 */
+  function measure(){ stageH = window.innerHeight; root.style.setProperty("--stage-h", stageH + "px"); root.style.setProperty("--stage-cover", vh() + "px"); }
+  measure();
+
+  /* ── I-10 Lenis — 데스크톱만(터치는 기본 스크롤) ── */
+  function smooth(){
+    if (!window.Lenis) return;
+    lenis = new Lenis({ lerp: .1, smoothWheel: true });
+    lenis.on("scroll", ScrollTrigger.update);
+    tick = function(t){ lenis.raf(t * 1000); };
+    gsap.ticker.add(tick); gsap.ticker.lagSmoothing(0);
+    return function(){ gsap.ticker.remove(tick); lenis.destroy(); lenis = null; };
+  }
+
+  /* ── I-01 고정 무대 + I-02 덮기 + I-11 : 데스크톱·모바일 모두(모바일 2026.10.23), 움직임 줄이기 아님 ── */
+  function stage(){
     var sec = document.querySelector("[data-i='I-01']");
     if (!sec) return;
     /* 단계 : 첫 화면 → 장면 1~4 → 대표 카피. 한 단계당 STEP 화면 분량 스크롤, 마지막 1 화면은 다음 섹션이 덮는 구간 */
@@ -127,7 +136,6 @@
       [].forEach.call(dots, function(d, j){ if (i === j + 1) d.setAttribute("aria-current", "step"); else d.removeAttribute("aria-current"); });
     }
     show(0);
-    var vh = function(){ return window.innerHeight; };
     var st = ScrollTrigger.create({
       trigger: sec, start: "top top",
       end: function(){ return "+=" + (vh() * (STEP * (P - 1) + 1)); },
@@ -150,7 +158,6 @@
       sec.classList.remove("is-stage"); sec.style.removeProperty("--cover"); sec.removeAttribute("data-ph");
       [].forEach.call(phases, function(ph, j){ ph.classList.toggle("is-on", j === 0); });
       if (next) next.classList.remove("w-cover");
-      if (lenis){ gsap.ticker.remove(tick); lenis.destroy(); lenis = null; }
     };
   }
 
@@ -168,7 +175,7 @@
     show(0);
     var st = ScrollTrigger.create({
       trigger: sec, start: "top top",
-      end: function(){ return "+=" + (window.innerHeight * (N - 1)); },   /* 한 장당 화면 1개 분량 */
+      end: function(){ return "+=" + (vh() * (N - 1)); },   /* 한 장당 화면 1개 분량 */
       pin: true, pinSpacing: true, invalidateOnRefresh: true,
       onUpdate: function(self){
         var k = self.progress * (N - 1);                                 /* 0 ~ N-1 */
@@ -198,7 +205,8 @@
     splitAll(); indexReveals(); observe();
     if (HAS_GSAP){
       mm = gsap.matchMedia();
-      mm.add("(min-width: 769px) and (prefers-reduced-motion: no-preference)", desktop);
+      mm.add("(min-width: 769px) and (prefers-reduced-motion: no-preference)", smooth);
+      mm.add("(prefers-reduced-motion: no-preference)", stage);
     }
   }
   function stop(){
@@ -214,7 +222,7 @@
   var rt;
   window.addEventListener("resize", function(){
     if (window.innerWidth === lastW) return; lastW = window.innerWidth;
-    clearTimeout(rt); rt = setTimeout(function(){ if (root.classList.contains("w-motion")){ splitAll(); if (HAS_GSAP) ScrollTrigger.refresh(); } }, 200);
+    clearTimeout(rt); rt = setTimeout(function(){ measure(); if (root.classList.contains("w-motion")){ splitAll(); if (HAS_GSAP) ScrollTrigger.refresh(); } }, 200);
   });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if (root.classList.contains("w-motion")){ splitAll(); if (HAS_GSAP) ScrollTrigger.refresh(); } });
   RM.addEventListener && RM.addEventListener("change", function(){ stop(); start(); });

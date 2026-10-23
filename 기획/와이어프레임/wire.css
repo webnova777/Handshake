@@ -202,7 +202,7 @@ html.w-motion .is-in [data-rv],html.w-motion [data-rv].is-in{ opacity:1; transfo
 .is-stage::after{ content:""; position:absolute; inset:0; z-index:4; background:#000; opacity:calc(var(--cover,0) * .35); pointer-events:none; }
 
 /* I-02 덮기 — 다음 섹션부터 무대 위로 */
-.w-cover{ margin-top:-100vh; z-index:2; }
+.w-cover{ margin-top:calc(-1 * var(--stage-cover,100vh)); z-index:2; }   /* 무대 높이만큼 끌어올려 덮는다 */
 .w-cover ~ .hdsk-sec,.w-cover ~ .hdsk-footer{ position:relative; z-index:2; }
 .w-cover ~ .hdsk-sec:not(.hdsk-sec--soft){ background:var(--paper); }   /* 투명 배경이면 뒤에 남은 무대가 비친다 */
 
